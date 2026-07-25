@@ -1,5 +1,5 @@
 @"
-# 🎮 CC Suite Pro
+#  CC Suite Pro
 
 ### *The Ultimate Sims 4 Content Management Suite*
 
@@ -7,7 +7,7 @@
 
 ---
 
-## ✨ Funcionalidades
+##  Funcionalidades
 
 - 🔍 **Escáner de archivos** - Analiza tu carpeta Mods
 - 🗂️ **Organizador automático** - Ordena por categoría o creador
@@ -18,7 +18,7 @@
 
 ---
 
-## 🚀 Instalación
+##  Instalación
 
 1. Descarga `CC_Suite_Pro.exe` de [Releases](https://github.com/TU_USUARIO/CC-Suite-Pro/releases)
 2. Ejecuta (Windows Defender puede advertir, es seguro)
@@ -27,7 +27,7 @@
 
 ---
 
-## 🛠️ Para desarrolladores
+##  Para desarrolladores
 
 ```bash
 git clone https://github.com/TU_USUARIO/CC-Suite-Pro.git
