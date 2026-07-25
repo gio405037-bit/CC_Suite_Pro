@@ -3,7 +3,7 @@
 
 ### *The Ultimate Sims 4 Content Management Suite*
 
-> **by Megarorun** 🐺
+> **by Megarorun** 
 
 ---
 
