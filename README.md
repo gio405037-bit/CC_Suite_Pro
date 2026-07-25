@@ -1,4 +1,4 @@
-@"
+
 #  CC Suite Pro
 
 ### *The Ultimate Sims 4 Content Management Suite*
