@@ -1,0 +1,58 @@
+{
+    "app": {
+        "title": "CC Suite Pro",
+        "subtitle": "Control Panel"
+    },
+    "buttons": {
+        "scan": "Scan Mods",
+        "organize": "Organize CC",
+        "duplicates": "Detect Duplicates",
+        "refresh": "Refresh",
+        "settings": "Settings"
+    },
+    "cards": {
+        "total_packages": "Total Packages",
+        "total_size": "Total Size",
+        "creators": "Creators",
+        "duplicates": "Duplicates"
+    },
+    "table": {
+        "title": "Scanned Files",
+        "no_files": "0 files"
+    },
+    "status": {
+        "ready": "Select your Mods folder",
+        "scanning": "Scanning...",
+        "scan_done": "Scan completed",
+        "organizing": "Organizing...",
+        "organize_done": "Done",
+        "detecting": "Detecting duplicates...",
+        "detect_done": "Analysis done"
+    },
+    "dialogs": {
+        "scan_complete": "Scan Complete",
+        "organize_title": "Organize CC",
+        "organize_question": "How to organize?",
+        "by_category": "By Category",
+        "by_author": "By Creator",
+        "cancel": "Cancel",
+        "confirm": "Confirm",
+        "confirm_organize": "Organize by {method}?",
+        "duplicates_found": "Duplicates Found",
+        "no_duplicates": "All Clean",
+        "no_duplicates_msg": "No duplicates!",
+        "delete_duplicates": "Delete?",
+        "warning_delete": "WARNING!",
+        "warning_delete_msg": "Delete permanently?",
+        "deleted": "Deleted"
+    },
+    "settings": {
+        "title": "Settings",
+        "language": "Language",
+        "save": "Save",
+        "close": "Close"
+    },
+    "details": {
+        "select": "Select a file"
+    }
+}
