@@ -20,7 +20,7 @@
 
 ##  Instalación
 
-1. Descarga `CC_Suite_Pro.exe` de [Releases](https://github.com/TU_USUARIO/CC-Suite-Pro/releases)
+Descarga el ejecutable desde [Releases](https://github.com/gio405037-bit/CC_Suite_Pro/releases)
 2. Ejecuta (Windows Defender puede advertir, es seguro)
 3. Selecciona tu carpeta Mods
 4. ¡Listo!
@@ -30,7 +30,7 @@
 ##  Para desarrolladores
 
 ```bash
-git clone https://github.com/TU_USUARIO/CC-Suite-Pro.git
+git clone https://github.com/gio405037-bit/CC_Suite_Pro.git
 cd CC-Suite-Pro
 pip install -r requirements.txt
 python main.py
