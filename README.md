@@ -9,12 +9,12 @@
 
 ##  Funcionalidades
 
-- 🔍 **Escáner de archivos** - Analiza tu carpeta Mods
-- 🗂️ **Organizador automático** - Ordena por categoría o creador
-- 🔎 **Detector de duplicados** - Encuentra y elimina CC repetido
-- 🎨 **UI profesional** - Tema oscuro premium
-- 🌐 **Multi-idioma** - Inglés y Español
-- 📦 **Ejecutable portable** - No necesita Python
+-  **Escáner de archivos** - Analiza tu carpeta Mods
+-  **Organizador automático** - Ordena por categoría o creador
+-  **Detector de duplicados** - Encuentra y elimina CC repetido
+-  **UI profesional** - Tema oscuro premium
+-  **Multi-idioma** - Inglés y Español
+-  **Ejecutable portable** - No necesita Python
 
 ---
 
