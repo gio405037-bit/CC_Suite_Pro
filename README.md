@@ -115,4 +115,14 @@ git clone https://github.com/gio405037-bit/CC_Suite_Pro.git
 
 This repository contains the official releases and documentation for CC Suite Pro.
 
+## Security
+
+Official Releases are only distributed through GitHub Releases.
+
+VirusTotal report: https://www.virustotal.com/gui/file/6bb780a519b1b012140887936b3013ae86c5be7368c337c91e4fe43c83836394
+
+
+SHA-256:
+420f7f4041c1c0faac3adad813ab50ad18e6fc9832e8f6efbc5ee49625879453
+
 © Megarorun — The Foundry
