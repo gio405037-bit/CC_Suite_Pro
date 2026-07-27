@@ -1,3 +1,14 @@
+![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%7C%2011-0078D6?style=for-the-badge)
+
+![Language](https://img.shields.io/badge/Language-English%20%7C%20Español-blue?style=for-the-badge)
+
+![Status](https://img.shields.io/badge/Status-Beta%20Genesis-orange?style=for-the-badge)
+
+![The Sims 4](https://img.shields.io/badge/Game-The%20Sims%204-5A2D82?style=for-the-badge)
+
+![Portable](https://img.shields.io/badge/Portable-Yes-success?style=for-the-badge)
+
+
 CC Suite Pro
 
 Organizing a large Mods folder shouldn't take hours.
