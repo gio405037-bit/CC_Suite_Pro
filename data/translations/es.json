@@ -1,10 +1,64 @@
-﻿{
-  "app": {"title": "CC Suite Pro", "subtitle": "Panel de Control"},
-  "buttons": {"scan": "Escanear Mods", "organize": "Organizar CC", "duplicates": "Detectar Duplicados", "refresh": "Actualizar", "settings": "Configuracion"},
-  "cards": {"total_packages": "Total Paquetes", "total_size": "Tamaño Total", "creators": "Creadores", "duplicates": "Duplicados"},
-  "table": {"title": "Archivos Escaneados", "no_files": "0 archivos"},
-  "status": {"ready": "Selecciona tu carpeta Mods", "scanning": "Escaneando...", "scan_done": "Escaneo completado", "organizing": "Organizando...", "organize_done": "Hecho", "detecting": "Buscando duplicados...", "detect_done": "Analisis completado"},
-  "dialogs": {"scan_complete": "Escaneo Completado", "organize_title": "Organizar CC", "organize_question": "Como organizar?", "by_category": "Por Categoria", "by_author": "Por Creador", "cancel": "Cancelar", "confirm": "Confirmar", "confirm_organize": "Organizar por {method}?", "duplicates_found": "Duplicados Encontrados", "no_duplicates": "Todo Limpio", "no_duplicates_msg": "Sin duplicados!", "delete_duplicates": "Eliminar?", "warning_delete": "CUIDADO!", "warning_delete_msg": "Eliminar permanentemente?", "deleted": "Eliminados", "backup_checkbox": "Crear backup antes de organizar (recomendado)", "backup_info": "El backup protege tus archivos si algo sale mal", "no_backup_warning": "Elegiste NO crear backup.\n\nSi algo sale mal, podrias perder archivos.\n\nEstas SEGURO?", "no_backup_title": "Sin Backup", "backup_yes": "Backup: SI", "backup_no": "Backup: NO"},
-  "settings": {"title": "Configuracion", "language": "Idioma", "save": "Guardar", "close": "Cerrar"},
-  "details": {"select": "Selecciona un archivo"}
+{
+  "app": {
+    "title": "CC Suite Pro",
+    "subtitle": "Panel de Control"
+  },
+  "buttons": {
+    "scan": "Escanear Mods",
+    "organize": "Organizar CC",
+    "duplicates": "Detectar Duplicados",
+    "refresh": "Actualizar",
+    "settings": "Configuracion"
+  },
+  "cards": {
+    "total_packages": "Total Paquetes",
+    "total_size": "Tamaño Total",
+    "creators": "Creadores",
+    "duplicates": "Duplicados"
+  },
+  "table": {
+    "title": "Archivos Escaneados",
+    "no_files": "0 archivos"
+  },
+  "status": {
+    "ready": "Selecciona tu carpeta Mods",
+    "scanning": "Escaneando...",
+    "scan_done": "Escaneo completado",
+    "organizing": "Organizando...",
+    "organize_done": "Hecho",
+    "detecting": "Buscando duplicados...",
+    "detect_done": "Analisis completado"
+  },
+  "dialogs": {
+    "scan_complete": "Escaneo Completado",
+    "organize_title": "Organizar CC",
+    "organize_question": "Como organizar?",
+    "by_category": "Por Categoria",
+    "by_author": "Por Creador",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "confirm_organize": "Organizar por {method}?",
+    "duplicates_found": "Duplicados Encontrados",
+    "no_duplicates": "Todo Limpio",
+    "no_duplicates_msg": "Sin duplicados!",
+    "delete_duplicates": "Eliminar?",
+    "warning_delete": "CUIDADO!",
+    "warning_delete_msg": "Eliminar permanentemente?",
+    "deleted": "Eliminados",
+    "backup_checkbox": "Crear backup antes de organizar (recomendado)",
+    "backup_info": "El backup protege tus archivos si algo sale mal",
+    "no_backup_warning": "Elegiste NO crear backup.\n\nSi algo sale mal, podrias perder archivos.\n\nEstas SEGURO?",
+    "no_backup_title": "Sin Backup",
+    "backup_yes": "Backup: SI",
+    "backup_no": "Backup: NO"
+  },
+  "settings": {
+    "title": "Configuracion",
+    "language": "Idioma",
+    "save": "Guardar",
+    "close": "Cerrar"
+  },
+  "details": {
+    "select": "Selecciona un archivo"
+  }
 }

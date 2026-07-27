@@ -19,19 +19,6 @@ C_BORDER = "#252B3A"
 C_GOLD = "#F0C45A"
 
 
-def _resource_path(relative_path: str) -> str:
-    """
-    Resuelve una ruta de recurso tanto en modo desarrollo (python main.py)
-    como empaquetado con PyInstaller --onefile. En --onefile, los archivos
-    listados con --add-data se extraen en tiempo de ejecución a una carpeta
-    temporal cuya ruta expone PyInstaller en sys._MEIPASS; en modo
-    desarrollo esa variable no existe, así que caemos a la carpeta del
-    propio script.
-    """
-    base_path = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(base_path, relative_path)
-
-
 class SpinnerWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -156,6 +143,88 @@ class SettingsDialog(QDialog):
         self.accept()
 
 
+class OrganizeDialog(QDialog):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.cfg = get_config()
+        self.t = self.cfg.t
+        self.result = {"method": None, "create_backup": True}
+        self._build_ui()
+
+    def _build_ui(self):
+        self.setWindowTitle("📁  " + self.t("dialogs.organize_title"))
+        self.setFixedSize(500, 340)
+        self.setStyleSheet(f"""
+            QDialog {{ background-color: {C_CARD}; border: 2px solid {C_BORDER}; border-radius: 14px; }}
+            QLabel {{ color: {C_TEXT}; background: transparent; }}
+            QCheckBox {{ color: {C_TEXT}; background: transparent; font-size: 12px; spacing: 10px; }}
+            QCheckBox::indicator {{ width: 24px; height: 24px; border: 2px solid {C_BORDER}; border-radius: 6px; background: {C_BG}; }}
+            QCheckBox::indicator:checked {{ background: {C_ACCENT}; border-color: {C_ACCENT}; }}
+        """)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(18)
+        layout.setContentsMargins(28, 24, 28, 24)
+        title = QLabel("📁  " + self.t("dialogs.organize_title"))
+        title.setFont(QFont("Segoe UI", 16, QFont.Weight.Bold))
+        title.setStyleSheet(f"color: {C_ACCENT}; background: transparent;")
+        layout.addWidget(title)
+        question = QLabel(self.t("dialogs.organize_question"))
+        question.setFont(QFont("Segoe UI", 12))
+        question.setStyleSheet(f"color: {C_TEXT}; background: transparent;")
+        layout.addWidget(question)
+        layout.addSpacing(10)
+        self.backup_checkbox = QCheckBox("💾  " + self.t("dialogs.backup_checkbox"))
+        self.backup_checkbox.setChecked(True)
+        self.backup_checkbox.setFont(QFont("Segoe UI", 10))
+        layout.addWidget(self.backup_checkbox)
+        info = QLabel("⚠️  " + self.t("dialogs.backup_info"))
+        info.setFont(QFont("Segoe UI", 8))
+        info.setStyleSheet(
+            "color: #9BA4B5; background: transparent; padding-left: 34px;"
+        )
+        layout.addWidget(info)
+        layout.addStretch()
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.HLine)
+        sep.setStyleSheet(f"background-color: {C_BORDER}; max-height: 1px;")
+        layout.addWidget(sep)
+        btn_layout = QHBoxLayout()
+        btn_layout.setSpacing(10)
+        btn_cat = QPushButton("  📁  " + self.t("dialogs.by_category"))
+        btn_cat.setMinimumHeight(44)
+        btn_cat.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_cat.setFont(QFont("Segoe UI", 10, QFont.Weight.Bold))
+        btn_cat.setStyleSheet(
+            "QPushButton { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #00B894, stop:1 #55EFC4); color: #0B0E14; border: none; border-radius: 8px; padding: 12px 20px; } QPushButton:hover { background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #00D4AA, stop:1 #6FF5D0); }"
+        )
+        btn_cat.clicked.connect(lambda: self._select("category"))
+        btn_layout.addWidget(btn_cat)
+        btn_auth = QPushButton("  👤  " + self.t("dialogs.by_author"))
+        btn_auth.setMinimumHeight(44)
+        btn_auth.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_auth.setFont(QFont("Segoe UI", 10))
+        btn_auth.setStyleSheet(
+            f"QPushButton {{ background: {C_BG}; color: {C_TEXT}; border: 1px solid {C_BORDER}; border-radius: 8px; padding: 12px 20px; }} QPushButton:hover {{ border-color: {C_ACCENT}; background: #1C2333; }}"
+        )
+        btn_auth.clicked.connect(lambda: self._select("author"))
+        btn_layout.addWidget(btn_auth)
+        btn_cancel = QPushButton("  " + self.t("dialogs.cancel"))
+        btn_cancel.setMinimumHeight(44)
+        btn_cancel.setCursor(Qt.CursorShape.PointingHandCursor)
+        btn_cancel.setFont(QFont("Segoe UI", 10))
+        btn_cancel.setStyleSheet(
+            "QPushButton { background: transparent; color: #9BA4B5; border: 1px solid transparent; border-radius: 8px; padding: 12px 20px; } QPushButton:hover { border-color: #E17055; color: #E17055; }"
+        )
+        btn_cancel.clicked.connect(self.reject)
+        btn_layout.addWidget(btn_cancel)
+        layout.addLayout(btn_layout)
+
+    def _select(self, method):
+        self.result["method"] = method
+        self.result["create_backup"] = self.backup_checkbox.isChecked()
+        self.accept()
+
+
 class ScanWorker(QThread):
     finished = pyqtSignal(dict)
 
@@ -171,16 +240,17 @@ class ScanWorker(QThread):
 class OrganizeWorker(QThread):
     finished = pyqtSignal(dict)
 
-    def __init__(self, db, path, method):
+    def __init__(self, db, path, method, create_backup=True):
         super().__init__()
         self.db = db
         self.path = path
         self.method = method
+        self.create_backup = create_backup
 
     def run(self):
         self.finished.emit(
             OrganizerEngine(self.db).organize(
-                self.path, method=self.method, create_backup=True
+                self.path, method=self.method, create_backup=self.create_backup
             )
         )
 
@@ -204,19 +274,13 @@ class MainWindow(QMainWindow):
         self.db = DatabaseManager()
         self.db.initialize()
         self.t = self.cfg.t
-        self.setWindowTitle("CC Suite Pro  |  by Megarorun")
+        self.setWindowTitle("  CC Suite Pro  |  by Megarorun")
         self.setMinimumSize(1200, 750)
         self.setStyleSheet(f"background-color: {C_BG}; color: {C_TEXT};")
         screen = QApplication.primaryScreen().geometry()
         self.setGeometry(
             (screen.width() - 1200) // 2, (screen.height() - 750) // 2, 1200, 750
         )
-        # Ícono también a nivel de ventana: en Windows, la barra de tareas
-        # toma este icono de QMainWindow (o de QApplication si no se
-        # sobreescribe aquí), independientemente del icono del .exe.
-        icon_path = _resource_path("icon.ico")
-        if os.path.exists(icon_path):
-            self.setWindowIcon(QIcon(icon_path))
         self._build_ui()
         self.refresh()
 
@@ -225,35 +289,28 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(central)
         layout.setSpacing(15)
         layout.setContentsMargins(30, 20, 30, 20)
-
-        # Título con marca personal
         title_layout = QHBoxLayout()
-        title = QLabel(" CC Suite Pro")
+        title = QLabel("🎮  CC Suite Pro")
         title.setFont(QFont("Segoe UI", 24, QFont.Weight.Bold))
         title.setStyleSheet(f"color: {C_ACCENT}; background: transparent;")
         title_layout.addWidget(title)
         title_layout.addStretch()
-
-        brand = QLabel("by Megarorun")
+        brand = QLabel("  by Megarorun")
         brand.setFont(QFont("Segoe UI", 11, QFont.Weight.DemiBold))
         brand.setStyleSheet(
             f"color: {C_GOLD}; background: transparent; padding: 6px 12px; border: 1px solid {C_GOLD}40; border-radius: 8px;"
         )
         title_layout.addWidget(brand)
         layout.addLayout(title_layout)
-
         subtitle = QLabel(self.t("app.subtitle"))
         subtitle.setFont(QFont("Segoe UI", 10))
         subtitle.setStyleSheet("color: #9BA4B5; background: transparent;")
         layout.addWidget(subtitle)
-
         self.status_lbl = QLabel(self.t("status.ready"))
         self.status_lbl.setStyleSheet(
             "color: #9BA4B5; padding: 8px 0; background: transparent;"
         )
         layout.addWidget(self.status_lbl)
-
-        # Botones con iconos
         btn_row = QHBoxLayout()
         btn_row.setSpacing(10)
         buttons = [
@@ -269,8 +326,6 @@ class MainWindow(QMainWindow):
             btn_row.addWidget(btn)
         btn_row.addStretch()
         layout.addLayout(btn_row)
-
-        # Tarjetas con iconos
         cards = QHBoxLayout()
         cards.setSpacing(12)
         card_info = [
@@ -282,7 +337,6 @@ class MainWindow(QMainWindow):
         for title_text, color, obj_name in card_info:
             cards.addWidget(self._make_card(title_text, "0", color, obj_name))
         layout.addLayout(cards)
-
         header = QHBoxLayout()
         header.addWidget(QLabel("📋  " + self.t("table.title")))
         header.addStretch()
@@ -290,7 +344,6 @@ class MainWindow(QMainWindow):
         self.count_lbl.setStyleSheet("color: #9BA4B5; background: transparent;")
         header.addWidget(self.count_lbl)
         layout.addLayout(header)
-
         self.table = QTableWidget()
         self.table.setColumnCount(4)
         self.table.setHorizontalHeaderLabels(
@@ -312,7 +365,6 @@ class MainWindow(QMainWindow):
             QHeaderView::section {{ background-color: {C_CARD}; color: #9BA4B5; padding: 10px 14px; border: none; border-bottom: 2px solid {C_BORDER}; font-size: 10px; font-weight: bold; }}
         """)
         layout.addWidget(self.table)
-
         self.detail_lbl = QLabel("🔍  " + self.t("details.select"))
         self.detail_lbl.setStyleSheet(
             f"color: #9BA4B5; background-color: {C_CARD}; border: 1px solid {C_BORDER}; border-radius: 8px; padding: 12px 16px;"
@@ -320,7 +372,6 @@ class MainWindow(QMainWindow):
         self.detail_lbl.setWordWrap(True)
         self.detail_lbl.setMinimumHeight(50)
         layout.addWidget(self.detail_lbl)
-
         self.setCentralWidget(central)
         self.loading = LoadingOverlay(central)
         self.statusBar().setStyleSheet(
@@ -414,33 +465,37 @@ class MainWindow(QMainWindow):
         )
         if not path:
             return
-        msg = QMessageBox()
-        msg.setWindowTitle("📁 " + self.t("dialogs.organize_title"))
-        msg.setText(self.t("dialogs.organize_question"))
-        btn_cat = msg.addButton(
-            self.t("dialogs.by_category"), QMessageBox.ButtonRole.YesRole
-        )
-        btn_auth = msg.addButton(
-            self.t("dialogs.by_author"), QMessageBox.ButtonRole.NoRole
-        )
-        msg.addButton(self.t("dialogs.cancel"), QMessageBox.ButtonRole.RejectRole)
-        msg.exec()
-        if msg.clickedButton() == btn_cat:
-            method = "category"
-        elif msg.clickedButton() == btn_auth:
-            method = "author"
-        else:
+        dialog = OrganizeDialog(self)
+        dialog.exec()
+        method = dialog.result["method"]
+        create_backup = dialog.result["create_backup"]
+        if method is None:
             return
+        if not create_backup:
+            confirm = QMessageBox.warning(
+                self,
+                "⚠️ " + self.t("dialogs.no_backup_title"),
+                self.t("dialogs.no_backup_warning"),
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+            )
+            if confirm != QMessageBox.StandardButton.Yes:
+                return
         confirm = QMessageBox.question(
             self,
             "⚠️ " + self.t("dialogs.confirm"),
-            self.t("dialogs.confirm_organize", method=method),
+            self.t("dialogs.confirm_organize", method=method)
+            + "\n\n"
+            + (
+                "📦 " + self.t("dialogs.backup_yes") + " ✅"
+                if create_backup
+                else "⚠️ " + self.t("dialogs.backup_no") + " ❌"
+            ),
             QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
         )
         if confirm == QMessageBox.StandardButton.Yes:
             self._show_loading("📁 Organizing files...")
             self.status_lbl.setText("📁 " + self.t("status.organizing"))
-            self.org_worker = OrganizeWorker(self.db, path, method)
+            self.org_worker = OrganizeWorker(self.db, path, method, create_backup)
             self.org_worker.finished.connect(self._on_organize_done)
             self.org_worker.start()
 
@@ -512,7 +567,7 @@ class MainWindow(QMainWindow):
     def show_detail(self, item: QTableWidgetItem):
         row = item.row()
         self.detail_lbl.setText(
-            f"📄 {self.table.item(row, 0).text()}  |  🏷️ {self.table.item(row, 1).text()}  |  👤 {self.table.item(row, 2).text()}  |  💾 {self.table.item(row, 3).text()}"
+            f"📄 {self.table.item(row, 0).text()} | 🏷️ {self.table.item(row, 1).text()} | 👤 {self.table.item(row, 2).text()} | 💾 {self.table.item(row, 3).text()}"
         )
 
     def refresh(self):
@@ -555,12 +610,9 @@ def main():
     app = QApplication(sys.argv)
     app.setFont(QFont("Segoe UI", 10))
     app.setApplicationName("CC Suite Pro")
-
-
-    icon_path = _resource_path("icon.ico")
+    icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
-
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

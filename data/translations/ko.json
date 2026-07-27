@@ -1,10 +1,64 @@
-﻿{
-  "app": {"title": "CC Suite Pro", "subtitle": "컨트롤 패널"},
-  "buttons": {"scan": "Mod 스캔", "organize": "CC 정리", "duplicates": "중복 검사", "refresh": "새로고침", "settings": "설정"},
-  "cards": {"total_packages": "총 패키지", "total_size": "총 용량", "creators": "제작자", "duplicates": "중복"},
-  "table": {"title": "스캔된 파일", "no_files": "파일 없음"},
-  "status": {"ready": "Mods 폴더를 선택하세요", "scanning": "스캔 중...", "scan_done": "스캔 완료", "organizing": "정리 중...", "organize_done": "정리 완료", "detecting": "중복 검사 중...", "detect_done": "분석 완료"},
-  "dialogs": {"scan_complete": "스캔 완료", "organize_title": "CC 정리", "organize_question": "어떻게 정리할까요?", "by_category": "카테고리별", "by_author": "제작자별", "cancel": "취소", "confirm": "확인", "confirm_organize": "{method}(으)로 정리할까요?", "duplicates_found": "중복 발견", "no_duplicates": "깨끗함", "no_duplicates_msg": "중복 파일이 없습니다!", "delete_duplicates": "중복을 삭제할까요?", "warning_delete": "경고!", "warning_delete_msg": "완전히 삭제하시겠습니까?", "deleted": "중복 삭제됨", "backup_checkbox": "정리하기 전에 백업 만들기 (권장)", "backup_info": "문제가 발생해도 백업이 파일을 보호합니다", "no_backup_warning": "백업을 만들지 않기로 했습니다.\n\n문제가 발생하면 파일을 잃을 수 있습니다.\n\n계속하시겠습니까?", "no_backup_title": "백업 없음", "backup_yes": "백업: 예", "backup_no": "백업: 아니오"},
-  "settings": {"title": "설정", "language": "언어", "save": "저장", "close": "닫기"},
-  "details": {"select": "파일을 선택하면 상세 정보가 표시됩니다"}
+{
+  "app": {
+    "title": "CC Suite Pro",
+    "subtitle": "컨트롤 패널"
+  },
+  "buttons": {
+    "scan": "Mod 스캔",
+    "organize": "CC 정리",
+    "duplicates": "중복 검사",
+    "refresh": "새로고침",
+    "settings": "설정"
+  },
+  "cards": {
+    "total_packages": "총 패키지",
+    "total_size": "총 용량",
+    "creators": "제작자",
+    "duplicates": "중복"
+  },
+  "table": {
+    "title": "스캔된 파일",
+    "no_files": "파일 없음"
+  },
+  "status": {
+    "ready": "Mods 폴더를 선택하세요",
+    "scanning": "스캔 중...",
+    "scan_done": "스캔 완료",
+    "organizing": "정리 중...",
+    "organize_done": "정리 완료",
+    "detecting": "중복 검사 중...",
+    "detect_done": "분석 완료"
+  },
+  "dialogs": {
+    "scan_complete": "스캔 완료",
+    "organize_title": "CC 정리",
+    "organize_question": "어떻게 정리할까요?",
+    "by_category": "카테고리별",
+    "by_author": "제작자별",
+    "cancel": "취소",
+    "confirm": "확인",
+    "confirm_organize": "{method}(으)로 정리할까요?",
+    "duplicates_found": "중복 발견",
+    "no_duplicates": "깨끗함",
+    "no_duplicates_msg": "중복 파일이 없습니다!",
+    "delete_duplicates": "중복을 삭제할까요?",
+    "warning_delete": "경고!",
+    "warning_delete_msg": "완전히 삭제하시겠습니까?",
+    "deleted": "중복 삭제됨",
+    "backup_checkbox": "정리하기 전에 백업 만들기 (권장)",
+    "backup_info": "문제가 발생해도 백업이 파일을 보호합니다",
+    "no_backup_warning": "백업을 만들지 않기로 했습니다.\n\n문제가 발생하면 파일을 잃을 수 있습니다.\n\n계속하시겠습니까?",
+    "no_backup_title": "백업 없음",
+    "backup_yes": "백업: 예",
+    "backup_no": "백업: 아니오"
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "save": "저장",
+    "close": "닫기"
+  },
+  "details": {
+    "select": "파일을 선택하면 상세 정보가 표시됩니다"
+  }
 }
