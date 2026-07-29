@@ -154,32 +154,6 @@ SHA-256
 
 ---
 
-# Building From Source
-
-Clone the repository
-
-```bash
-git clone https://github.com/gio405037-bit/CC_Suite_Pro.git
-cd CC_Suite_Pro
-```
-
-Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-Run the application
-
-```bash
-python main.py
-```
-
-Build the executable
-
-Compile the application using your preferred packaging method (Nuitka or PyInstaller).
-
----
 
 # Contributing
 
