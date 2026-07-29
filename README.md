@@ -1,128 +1,209 @@
+# CC Suite Pro
 
+### Smart tools for managing The Sims 4 Mods.
 
+CC Suite Pro is a free desktop application designed to simplify the management of **The Sims 4** Custom Content and Mods.
 
-CC Suite Pro
+Whether you have a few hundred files or a library containing thousands of packages, CC Suite Pro helps organize, analyze and maintain your Mods folder safely and efficiently.
 
-Organizing a large Mods folder shouldn't take hours.
+The project focuses on three core principles:
 
-CC Suite Pro is a standalone Windows application designed to help The Sims 4 players manage thousands of Custom Content files quickly, safely, and efficiently.
+* **Safety** – Automatic backups before making changes.
+* **Transparency** – Open source and publicly documented.
+* **Efficiency** – Save time managing large collections of Custom Content.
 
-Whether you're downloading new CC every day or maintaining a massive Mods folder, CC Suite Pro automates the most repetitive tasks while keeping your files safe through automatic backups.
+---
 
-Developed by Megarorun
+# About The Foundry
 
-Part of The Foundry
+CC Suite Pro is the first project developed under **The Foundry**, an initiative dedicated to creating free, high-quality tools and gameplay enhancements for The Sims 4 community.
 
-✨ Features
-🔍 Scan Mods
+---
+
+# Features
+
+## Scan Mods
 
 Analyze your Mods folder in seconds.
 
-View useful information including:
+The scanner provides useful information including:
 
-📦 Total package files
-💾 Total storage used
-👤 Number of creators
-🔎 Duplicate files detected
-📁 Automatic Organization
+* Total package files
+* Total storage used
+* Number of creators
+* Duplicate files detected
+* Folder statistics
 
-Keep your Mods folder clean and organized.
+---
 
-Organize your Custom Content by:
+## Automatic Organization
 
-Category
-Creator
+Organize your Custom Content automatically by:
 
-Before moving any files, CC Suite Pro automatically creates a backup of your original folder.
+* Creator
+* Category
 
-🔎 Duplicate Detection
+Before any file is moved, CC Suite Pro automatically creates a complete backup of the original folder.
 
-Quickly locate duplicated Custom Content and recover valuable disk space by removing unnecessary copies.
+---
 
-🌍 Multi-language
+## Duplicate Detection
 
-Currently supported:
+Locate duplicated package files quickly and safely.
 
-🇺🇸 English
-🇪🇸 Español
+Free storage space while keeping your collection organized.
 
-More languages are planned for future releases.
+---
 
-🚀 Current Release
+## Multi-language Support
 
-Beta Genesis
+Currently available in:
 
-The first public version of CC Suite Pro.
+* English
+* Español
 
-This release focuses on providing the essential tools needed to organize and maintain large Mods folders while laying the foundation for future features.
+Additional languages will be added in future releases.
 
-📋 Roadmap
-Beta Genesis ✅
-Scan Mods
-Automatic Organization
-Duplicate Detection
-Automatic Backups
-Multi-language Support
-Beta Pioneer 🚧
-Conflict Detection
-Improved Search
-Better Categorization
-Future Releases
-Health Center
-Advanced Mod Analysis
-Performance Improvements
-Additional Quality-of-Life Tools
+---
 
-💻 Requirements
-Windows 10 / Windows 11
-The Sims 4
-Access to your Mods folder
+# Current Release
+
+## Beta Genesis
+
+The first public release of CC Suite Pro.
+
+This version establishes the foundation of the project by providing the essential tools required to manage large Mods folders while preparing the infrastructure for future features.
+
+---
+
+# Roadmap
+
+## Beta Genesis
+
+* Scan Mods
+* Automatic Organization
+* Duplicate Detection
+* Automatic Backups
+* Multi-language Support
+
+## Beta Pioneer
+
+* Conflict Detection
+* Advanced Search
+* Improved Categorization
+* Performance Optimizations
+
+## Future Releases
+
+* Health Center
+* Mod Diagnostics
+* Enhanced Statistics
+* Additional Quality-of-Life Features
+
+---
+
+# Requirements
+
+Supported Operating Systems
+
+* Windows 10
+* Windows 11
+
+Requirements
+
+* The Sims 4
+* Access to the Mods folder
 
 No installation is required.
 
-Simply extract the ZIP file and run CC Suite Pro.exe.
+Simply extract the archive and run **CC Suite Pro.exe**.
 
-📥 Download
+Administrator privileges are not required.
 
-Download the latest version from the Releases section.
+---
 
-👉 https://github.com/gio405037-bit/CC_Suite_Pro/releases
+# Download
 
-🛡 Security
+Official releases are distributed exclusively through GitHub Releases.
 
-CC Suite Pro is distributed as a standalone Windows executable.
+Latest Release:
 
-You can verify every release using the published SHA-256 hash and the VirusTotal report included with each release.
+https://github.com/gio405037-bit/CC_Suite_Pro/releases
 
-❤️ Support
+---
 
-If you enjoy the project and would like to support future development:
+# Security & Transparency
 
-Patreon (coming soon)
-Ko-fi (coming soon)
-🤝 Contributing
+Transparency is an important part of this project.
 
-Suggestions, bug reports and feature requests are always welcome.
+The complete source code is publicly available and every official release is distributed through GitHub.
+
+For additional verification:
+
+* Source Code:
+  https://github.com/gio405037-bit/CC_Suite_Pro
+
+* VirusTotal Report:
+  https://www.virustotal.com/gui/file/6bb780a519b1b012140887936b3013ae86c5be7368c337c91e4fe43c83836394
+
+SHA-256
+
+```
+6bb780a519b1b012140887936b3013ae86c5be7368c337c91e4fe43c83836394
+```
+
+---
+
+# Building From Source
+
+Clone the repository
+
+```bash
+git clone https://github.com/gio405037-bit/CC_Suite_Pro.git
+cd CC_Suite_Pro
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the application
+
+```bash
+python main.py
+```
+
+Build the executable
+
+Compile the application using your preferred packaging method (Nuitka or PyInstaller).
+
+---
+
+# Contributing
+
+Bug reports, feature requests and suggestions are always welcome.
 
 Community feedback helps shape future versions of CC Suite Pro.
 
-👨‍💻 Developers
+---
 
-Clone the repository:
+# Support Development
 
-git clone https://github.com/gio405037-bit/CC_Suite_Pro.git
-📜 License
+If you'd like to support future development, consider following the project on:
 
-This repository contains the official releases and documentation for CC Suite Pro.
+* Patreon *(Coming Soon)*
+* Ko-fi *(Coming Soon)*
 
-## Security
+Your support helps fund future tools and improvements for The Foundry.
 
-Official Releases are only distributed through GitHub Releases.
+---
 
-VirusTotal report: https://www.virustotal.com/gui/file/6bb780a519b1b012140887936b3013ae86c5be7368c337c91e4fe43c83836394
+# License
 
+This repository contains the official source code, documentation and releases for CC Suite Pro.
 
-SHA-256:
-6bb780a519b1b012140887936b3013ae86c5be7368c337c91e4fe43c83836394
+Unless otherwise stated, all official releases are published by **Megarorun** under **The Foundry**.
 
 © Megarorun — The Foundry
