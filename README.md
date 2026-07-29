@@ -167,7 +167,7 @@ Community feedback helps shape future versions of CC Suite Pro.
 
 If you'd like to support future development, consider following the project on:
 
-* Patreon *(Coming Soon)*
+* Patreon (https://www.patreon.com/cw/megaron)
 * Ko-fi *(Coming Soon)*
 
 Your support helps fund future tools and improvements for The Foundry.
