@@ -64,9 +64,9 @@ CC Suite Pro is an all-in-one manager for The Sims 4 Mods and Custom Content. Bu
 
 **Megarorun** - Developer
 
-- [Nexus Mods](https://www.nexusmods.com)
-- [LoversLab](https://www.loverslab.com)
-- [Patreon](https://www.patreon.com)
+- [Nexus Mods](https://www.nexusmods.com/profile/Megarorun)
+- [LoversLab](https://www.loverslab.com/profile/12072398-megaronun/)
+- [Patreon](https://www.patreon.com/cw/megaron)
 
 ---
 
