@@ -76,4 +76,4 @@ Free & Open Source
 
 ---
 
-© 2024 Megarorun
+© 2026 Megarorun
