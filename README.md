@@ -26,7 +26,7 @@ CC Suite Pro is an all-in-one manager for The Sims 4 Mods and Custom Content. Bu
 - 💾 **Full Backups** (ZIP with progress)
 - 📦 **Mod Installer** (.package / .ts4script)
 - 🌍 **Multi-language** (English, Espanol, 한국어)
-- 🎨 **Modern Steam-dark UI**
+- 🎨 **Modern Dark UI**
 - ⚡ **Fast scanning** optimized for large libraries
 
 ---
