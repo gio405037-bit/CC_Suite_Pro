@@ -1,44 +1,79 @@
-﻿# 🔥 CC Suite Pro v1.0 Beta
+﻿# 🔥 CC Suite Pro v2.0 Beta "Post Genesis"
 
-After managing thousands of Sims 4 Mods and Custom Content over the years, I realized there wasn't a single application that offered everything I needed.
+**The Ultimate Sims 4 Mod & CC Manager**
+
+![Version](https://img.shields.io/badge/version-2.0%20Beta-blue)
+![.NET](https://img.shields.io/badge/.NET-8.0-purple)
+![Language](https://img.shields.io/badge/language-C%23-green)
+![License](https://img.shields.io/badge/license-Free%20%26%20Open%20Source-orange)
+![Windows](https://img.shields.io/badge/platform-Windows%2010%2F11-lightgrey)
+
+---
+
+## 📖 About
+
+CC Suite Pro is an all-in-one manager for The Sims 4 Mods and Custom Content. Built with C# and .NET 8.0 for maximum performance and a modern UI.
+
+---
 
 ## ✨ Features
 
-* 📂 One-click automatic organization
-* 🔍 MD5 duplicate detection
-* ⚔️ Advanced conflict detection
-* 🩺 Health Center with diagnostics and recommendations
-* 🛡️ Full & incremental backups
-* 🏷️ Smart tag management
-* 📊 Statistics and library analytics
-* 📦 Drag & Drop installer
-* 🌍 Multi-language support
-* 🎨 Multiple themes
-* ⌨️ Keyboard shortcuts
-* ⚡ Fast scanning optimized for large libraries
+- 📂 **One-click organization** (by Category or Creator)
+- 🔍 **MD5 Duplicate Detection** 
+- ⚔️ **Conflict Detection** (Cross-format + Version)
+- 🧠 **Smart Classification** (15 categories + Confidence Score)
+- 🧹 **Junk Cleaner** (cache, empty, temp, corrupted files)
+- 💾 **Full Backups** (ZIP with progress)
+- 📦 **Mod Installer** (.package / .ts4script)
+- 🌍 **Multi-language** (English, Espanol, 한국어)
+- 🎨 **Modern Steam-dark UI**
+- ⚡ **Fast scanning** optimized for large libraries
+
+---
 
 ## 💻 Requirements
 
-* Windows 10/11 (64-bit)
-* The Sims 4
-* .NET 8.0 Runtime
+- Windows 10/11 (64-bit)
+- The Sims 4
+- **No additional software required** (.NET included)
 
-## 🚀 Getting Started
+---
 
-1. Download the latest release
-2. Launch CC_Suite_Pro.exe
+## 🚀 Installation
+
+1. Download `CCSuitePro.exe` from [Releases](https://github.com/gio405037-bit/CC_Suite_Pro/releases)
+2. Run it
 3. Select your Sims 4 Mods folder
-4. Let CC Suite Pro scan your library
-5. Start organizing your collection!
+4. Start organizing!
 
-## 🛠️ Development
+---
 
-Built with:
-- C# / .NET 8.0
-- WPF (Windows Presentation Foundation)
-- Material Design In XAML
-- MVVM Architecture
+## 📊 Tech Stack
 
-## ❤️ Free & Open Source
+| Technology | Use |
+|------------|-----|
+| C# / .NET 8.0 | Language |
+| WPF | UI Framework |
+| Material Design | Theme |
+| MVVM | Architecture |
+| Newtonsoft.Json | JSON parsing |
 
-CC Suite Pro is completely free and open source.
+---
+
+## 👤 Credits
+
+**Megarorun** - Developer
+
+- [Nexus Mods](https://www.nexusmods.com)
+- [LoversLab](https://www.loverslab.com)
+- [Patreon](https://www.patreon.com)
+
+---
+
+## 📜 License
+
+Free & Open Source
+
+---
+
+© 2024 Megarorun
