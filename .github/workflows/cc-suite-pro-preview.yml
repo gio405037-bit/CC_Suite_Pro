@@ -1,6 +1,8 @@
 name: CC Suite Pro - Build candidate (NO PUBLICAR)
 
 on:
+  pull_request:
+    branches: [main]
   workflow_dispatch:
     inputs:
       version:
@@ -8,6 +10,8 @@ on:
         required: true
         default: "2.0.0-w42-preview"
         type: string
+        
+
 
 permissions:
   contents: read
