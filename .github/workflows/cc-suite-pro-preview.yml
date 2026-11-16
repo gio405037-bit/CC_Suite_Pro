@@ -25,8 +25,8 @@ jobs:
     name: Revisar, probar y empaquetar (sin publicar)
     runs-on: windows-latest
     timeout-minutes: 45
-    env:
-      PREVIEW_VERSION: ${{ inputs.version }}
+       env:
+      PREVIEW_VERSION: "${{ inputs.version || '2.0.0-w42-preview' }}"
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
     steps:
       - name: Obtener codigo
