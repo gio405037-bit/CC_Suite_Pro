@@ -1,33 +1,24 @@
-﻿<Window x:Class="CCSuitePro.OrganizeDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Organize Mods" Height="500" Width="550"
-        WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
-        Background="#0D1117" WindowStyle="None" AllowsTransparency="True">
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:services="clr-namespace:CCSuitePro.Services" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="CCSuitePro.OrganizeDialog" Title="{Binding [dialog_organize_title], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Height="500" Width="550" WindowStartupLocation="CenterOwner" ResizeMode="NoResize" Background="{DynamicResource Theme.Brush.0D1117}" WindowStyle="None" AllowsTransparency="True">
     
-    <Border Background="#161B22" CornerRadius="12" BorderBrush="#21262D" BorderThickness="1">
+    <Border Background="{DynamicResource Theme.Brush.161B22}" CornerRadius="12" BorderBrush="{DynamicResource Theme.Brush.21262D}" BorderThickness="1">
         <StackPanel Margin="24">
-            <TextBlock Text="Organize Mods" Foreground="#E6EDF3" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
+            <TextBlock Text="{Binding [dialog_organize_title], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.E6EDF3}" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/>
             
-            <TextBlock Text="Organize by:" Foreground="#8B949E" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
-            <ComboBox ItemsSource="{Binding OrganizeModes}" SelectedIndex="{Binding SelectedOrganizeModeIndex}"
-                     Foreground="#E6EDF3" Background="#0D1117" BorderBrush="#21262D" Height="36" Margin="0,0,0,16"/>
+            <TextBlock Text="{Binding [dialog_organize_by], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8B949E}" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
+            <ComboBox Style="{StaticResource CCSuiteDarkComboBox}" ItemsSource="{Binding OrganizeModes}" SelectedIndex="{Binding SelectedOrganizeModeIndex}" Foreground="{DynamicResource Theme.Brush.E6EDF3}" Background="{DynamicResource Theme.Brush.0D1117}" BorderBrush="{DynamicResource Theme.Brush.21262D}" Height="36" Margin="0,0,0,16"/>
             
             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                <Button Content="Preview" Style="{StaticResource ActionButton}" Click="Preview_Click" Width="120" Height="36" Margin="0,0,10,0"/>
-                <Button Content="Organize Now" Style="{StaticResource ActionButton}" Click="Organize_Click" Width="140" Height="36"/>
+                <Button Content="{Binding [dialog_preview], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource ActionButton}" Click="Preview_Click" Width="120" Height="36" Margin="0,0,10,0"/>
+                <Button Content="{Binding [dialog_organize_now], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource ActionButton}" Click="Organize_Click" Width="140" Height="36"/>
             </StackPanel>
             
-            <Border Background="#0D1117" CornerRadius="8" Padding="16" BorderBrush="#21262D" BorderThickness="1"
-                    Visibility="{Binding IsPreviewLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Background="{DynamicResource Theme.Brush.0D1117}" CornerRadius="8" Padding="16" BorderBrush="{DynamicResource Theme.Brush.21262D}" BorderThickness="1" Visibility="{Binding IsPreviewLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <ScrollViewer MaxHeight="250">
-                    <TextBlock Text="{Binding OrganizePreview}" Foreground="#C9D1D9" FontSize="13" FontFamily="Consolas"/>
+                    <TextBlock Text="{Binding OrganizePreview}" Foreground="{DynamicResource Theme.Brush.C9D1D9}" FontSize="13" FontFamily="Consolas"/>
                 </ScrollViewer>
             </Border>
             
-            <Button Content="Close" Style="{StaticResource SecondaryButton}" Click="Close_Click" Width="80" Height="36" 
-                    HorizontalAlignment="Right" Margin="0,16,0,0"/>
+            <Button Content="{Binding [dialog_close], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource SecondaryButton}" Click="Close_Click" Width="80" Height="36" HorizontalAlignment="Right" Margin="0,16,0,0"/>
         </StackPanel>
     </Border>
 </Window>

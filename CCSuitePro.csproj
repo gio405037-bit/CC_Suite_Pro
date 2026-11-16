@@ -1,6 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <!-- Privacy: map local source checkout paths to a virtual, non-personal path. -->
+    <PathMap>$(MSBuildProjectDirectory)=/_/CCSuitePro</PathMap>
+    <Nullable>enable</Nullable>
+    <DebugType>portable</DebugType>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
@@ -8,15 +13,24 @@
     <SelfContained>true</SelfContained>
     <PublishSingleFile>false</PublishSingleFile>
     <Version>2.0.0</Version>
+    <!-- Never compile XAML / C# files copied into backup or release folders. -->
+    <DefaultItemExcludes>$(DefaultItemExcludes);Backup_*\**;**\Backup_*\**;_hotfix_backup_*\**;**\_hotfix_backup_*\**;_release*\**</DefaultItemExcludes>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
-    <Product>CC Suite Pro</Product>
-    <Company>Megarorun</Company>
-    <Authors>Megarorun</Authors>
-    <Description>The Sims 4 Mod and CC Manager</Description>
-    <Copyright>2026 Megarorun</Copyright>
+    <Product>CC Suite Pro - Winter Edition 2026</Product>
+    <Company>megaronun</Company>
+    <Authors>megaronun</Authors>
+    <Description>The Sims 4 Mod and CC Manager - v2.0 Stable Winter Edition 2026</Description>
+    <Copyright>2026 megaronun</Copyright>
     <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Exclude tests and backups from SDK C# / WPF source items. -->
+    <Compile Remove="Tests\**\*.cs;Backup_*\**\*.cs;**\Backup_*\**\*.cs;_hotfix_backup_*\**\*.cs;**\_hotfix_backup_*\**\*.cs" />
+    <Page Remove="Backup_*\**\*.xaml;**\Backup_*\**\*.xaml;_hotfix_backup_*\**\*.xaml;**\_hotfix_backup_*\**\*.xaml" />
+    <ApplicationDefinition Remove="Backup_*\**\*.xaml;**\Backup_*\**\*.xaml;_hotfix_backup_*\**\*.xaml;**\_hotfix_backup_*\**\*.xaml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
@@ -30,4 +44,20 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <Resource Include="Resources\HeroSplash.jpg" />
+  </ItemGroup>
+
+<ItemGroup><None Update="Data\creators.json"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory></None><None Update="AI\local_model.py"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory><CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory></None></ItemGroup>
+
+  <!-- WINTER35_FIX01_EXCLUDE_LOCAL_MODEL: no distribuir IA experimental -->
+  <ItemGroup>
+    <None Remove="AI\local_model.py" />
+    <Content Remove="AI\local_model.py" />
+    <EmbeddedResource Remove="AI\local_model.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\WinterSplashLogo.png" />
+    <Resource Include="Resources\WinterSplashLogo.png" />
+  </ItemGroup>
 </Project>

@@ -2,26 +2,14 @@
 
 namespace CCSuitePro.Helpers
 {
-    /// <summary>
-    /// Resuelve la categoría usando 3 niveles: Nombre/Carpeta → Contenido → Tamaño
-    /// </summary>
+    /// <summary>Single entry point for the conservative native classifier.</summary>
     public static class CategoryResolver
     {
-        private static SizeAnalyzer? _sizeAnalyzer;
-        private static SizeAnalyzer SizeAnalyzerInstance => _sizeAnalyzer ??= new SizeAnalyzer();
+        private static readonly ClassificationEngine Classifier = new();
 
         public static string Resolve(string filePath)
         {
-            // Nivel 1: Nombre/Carpeta
-            var category = FileHelper.GetCategoryFromPath(filePath);
-            if (category != "Other") return category;
-
-            // Nivel 2: Contenido interno
-            var analyzed = FileHelper.GetCategoryWithAnalysis(filePath);
-            if (analyzed != "Other") return analyzed;
-
-            // Nivel 3: Tamaño
-            return SizeAnalyzerInstance.GuessCategoryBySize(filePath);
+            return Classifier.Classify(filePath).PrimaryCategory;
         }
     }
 }

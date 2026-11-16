@@ -1,8 +1,8 @@
-<Application x:Class="CCSuitePro.App"
+﻿<Application x:Class="CCSuitePro.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:converters="clr-namespace:CCSuitePro.Converters"
-             StartupUri="MainWindow.xaml">
+             >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -10,8 +10,113 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.BlueGrey.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Teal.xaml" />
+                <!-- Swappable palettes; Actual remains the default for existing users. -->
+                <ResourceDictionary Source="Themes/Actual.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
+            <!-- Unified dark picker: main Settings, Organize dialog, on-screen tour and Quick Guide. -->
+            <Style x:Key="CCSuiteDarkComboItem" TargetType="ComboBoxItem">
+                <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.E8F0FF}"/>
+                <Setter Property="Background" Value="{DynamicResource Theme.Brush.12233B}"/>
+                <Setter Property="Padding" Value="12,9"/>
+                <Setter Property="MinHeight" Value="34"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBoxItem">
+                            <Border x:Name="ItemSurface" Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsHighlighted" Value="True"><Setter TargetName="ItemSurface" Property="Background" Value="{DynamicResource Theme.Brush.234A7E}"/></Trigger>
+                                <Trigger Property="IsSelected" Value="True"><Setter TargetName="ItemSurface" Property="Background" Value="{DynamicResource Theme.Brush.1B3760}"/></Trigger>
+                                <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.5"/></Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <!-- Functional unified picker: one full-width surface, one arrow and one label. -->
+            <!-- Keeps the tested Hotfix 06 IsDropDownOpen/Popup behavior. -->
+            <Style x:Key="CCSuiteDarkComboBox" TargetType="ComboBox">
+                <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.E8F0FF}"/>
+                <Setter Property="Background" Value="{DynamicResource Theme.Brush.182C49}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.42638D}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Height" Value="36"/>
+                <Setter Property="SnapsToDevicePixels" Value="True"/>
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <Setter Property="ItemContainerStyle" Value="{StaticResource CCSuiteDarkComboItem}"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid x:Name="PickerRoot" SnapsToDevicePixels="True">
+                                <!-- The visible surface belongs to the full picker rather than only its arrow. -->
+                                <Border x:Name="PickerSurface" Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="6" IsHitTestVisible="False"/>
+                                <ToggleButton x:Name="DropdownToggle"
+                                              HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"
+                                              Focusable="False" IsTabStop="False" ClickMode="Press"
+                                              Background="Transparent" BorderThickness="0"
+                                              IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Grid Background="Transparent">
+                                                <Path Data="M 0 0 L 8 0 L 4 5 Z"
+                                                      Fill="{DynamicResource Theme.Brush.B8D7FF}"
+                                                      HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                      Margin="0,0,14,0" IsHitTestVisible="False"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <!-- The selected value and arrow now share the same bordered field. -->
+                                <ContentPresenter x:Name="SelectionLabel" Margin="14,0,38,0"
+                                                  HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                  IsHitTestVisible="False" RecognizesAccessKey="True"
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+                                <Popup x:Name="PART_Popup" Placement="Bottom" AllowsTransparency="True"
+                                       Focusable="False" PopupAnimation="Fade"
+                                       IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Border x:Name="DropDownBorder" Background="{DynamicResource Theme.Brush.102039}"
+                                            BorderBrush="{DynamicResource Theme.Brush.52739D}"
+                                            BorderThickness="1" CornerRadius="6"
+                                            Padding="4" MinWidth="{Binding ActualWidth, ElementName=PickerRoot}">
+                                        <ScrollViewer MaxHeight="220" CanContentScroll="True"
+                                                      VerticalScrollBarVisibility="Auto"
+                                                      HorizontalScrollBarVisibility="Disabled">
+                                            <ItemsPresenter x:Name="ItemsPresenter"
+                                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="PickerSurface" Property="BorderBrush"
+                                            Value="{DynamicResource Theme.Brush.76ACF6}"/>
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                    <Setter TargetName="PickerSurface" Property="BorderBrush"
+                                            Value="{DynamicResource Theme.Brush.8CC5FF}"/>
+                                </Trigger>
+                                <Trigger Property="IsDropDownOpen" Value="True">
+                                    <Setter TargetName="PickerSurface" Property="BorderBrush"
+                                            Value="{DynamicResource Theme.Brush.8CC5FF}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
             <!-- Converters -->
             <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
             <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
@@ -20,9 +125,9 @@
             <!-- Estilos personalizados -->
             <Style x:Key="SidebarButton" TargetType="Button">
                 <Setter Property="Background" Value="Transparent"/>
-                <Setter Property="Foreground" Value="#8B949E"/>
+                <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.A7B8CA}"/>
                 <Setter Property="FontSize" Value="13"/>
-                <Setter Property="Height" Value="44"/>
+                <Setter Property="Height" Value="46"/>
                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                 <Setter Property="Cursor" Value="Hand"/>
                 <Setter Property="Template">
@@ -39,8 +144,8 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#2D333B"/>
-                                    <Setter Property="Foreground" Value="#E6EDF3"/>
+                                    <Setter Property="Background" Value="{DynamicResource Theme.Brush.2D333B}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.E6EDF3}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -49,7 +154,7 @@
             </Style>
             
             <Style x:Key="ActionButton" TargetType="Button">
-                <Setter Property="Background" Value="#238636"/>
+                <Setter Property="Background" Value="{DynamicResource Theme.Brush.278A50}"/>
                 <Setter Property="Foreground" Value="White"/>
                 <Setter Property="FontSize" Value="13"/>
                 <Setter Property="FontWeight" Value="SemiBold"/>
@@ -62,19 +167,19 @@
                                     CornerRadius="6"
                                     Padding="16,0"
                                     BorderThickness="1"
-                                    BorderBrush="#2EA043">
+                                    BorderBrush="{DynamicResource Theme.Brush.319A60}">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <ContentPresenter VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#2EA043"/>
+                                    <Setter Property="Background" Value="{DynamicResource Theme.Brush.2EA043}"/>
                                 </Trigger>
                                 <Trigger Property="IsEnabled" Value="False">
-                                    <Setter Property="Background" Value="#21262D"/>
-                                    <Setter Property="Foreground" Value="#484F58"/>
-                                    <Setter Property="BorderBrush" Value="#30363D"/>
+                                    <Setter Property="Background" Value="{DynamicResource Theme.Brush.21262D}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.484F58}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.30363D}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -83,8 +188,8 @@
             </Style>
             
             <Style x:Key="SecondaryButton" TargetType="Button">
-                <Setter Property="Background" Value="#21262D"/>
-                <Setter Property="Foreground" Value="#C9D1D9"/>
+                <Setter Property="Background" Value="{DynamicResource Theme.Brush.21262D}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.C9D1D9}"/>
                 <Setter Property="FontSize" Value="13"/>
                 <Setter Property="Height" Value="36"/>
                 <Setter Property="Cursor" Value="Hand"/>
@@ -95,15 +200,15 @@
                                     CornerRadius="6"
                                     Padding="16,0"
                                     BorderThickness="1"
-                                    BorderBrush="#30363D">
+                                    BorderBrush="{DynamicResource Theme.Brush.30363D}">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <ContentPresenter VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#30363D"/>
-                                    <Setter Property="BorderBrush" Value="#8B949E"/>
+                                    <Setter Property="Background" Value="{DynamicResource Theme.Brush.30363D}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.8B949E}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -112,17 +217,17 @@
             </Style>
             
             <Style x:Key="StatsCard" TargetType="Border">
-                <Setter Property="Background" Value="#161B22"/>
-                <Setter Property="CornerRadius" Value="8"/>
-                <Setter Property="Padding" Value="16,12"/>
+                <Setter Property="Background" Value="{DynamicResource Theme.Brush.161B22}"/>
+                <Setter Property="CornerRadius" Value="12"/>
+                <Setter Property="Padding" Value="18,15"/>
                 <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="#21262D"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.21262D}"/>
                 <Setter Property="Margin" Value="0,0,12,0"/>
             </Style>
             
             <Style x:Key="ModernTabItem" TargetType="TabItem">
                 <Setter Property="FontSize" Value="13"/>
-                <Setter Property="Foreground" Value="#8B949E"/>
+                <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.A7B8CA}"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="TabItem">
@@ -135,11 +240,11 @@
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="#E6EDF3"/>
-                                    <Setter Property="BorderBrush" Value="#58A6FF"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.E6EDF3}"/>
+                                    <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.58A6FF}"/>
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Foreground" Value="#E6EDF3"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.E6EDF3}"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -152,7 +257,7 @@
                 <Setter Property="Width" Value="28"/>
                 <Setter Property="Height" Value="28"/>
                 <Setter Property="IsIndeterminate" Value="True"/>
-                <Setter Property="Foreground" Value="#58A6FF"/>
+                <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.58A6FF}"/>
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Template">
                     <Setter.Value>

@@ -1,4 +1,4 @@
-﻿bin/
+bin/
 obj/
 *.user
 *.suo
@@ -6,3 +6,11 @@ obj/
 Release/
 Debug/
 *.zip
+
+# Winter 42 - datos locales y archivos de compilacion
+.env
+.env.*
+Mods/
+PatchDiagnostics/
+PatchBackups/
+TestResults/

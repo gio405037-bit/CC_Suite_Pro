@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,7 +22,7 @@ namespace CCSuitePro.Services
             }
             
             var relevantFiles = modFiles
-                .Where(f => f != null && (f.IsPackage || f.IsScript) && !string.IsNullOrEmpty(f.MD5Hash))
+                .Where(f => f != null && (f.IsPackage || f.IsScript) && f.MD5Hash.Length == 32 && f.MD5Hash.All(Uri.IsHexDigit))
                 .ToList();
             
             if (relevantFiles.Count < 2) return conflicts;
@@ -42,20 +42,21 @@ namespace CCSuitePro.Services
                         var f2 = files[j];
                         
                         if (f1 == null || f2 == null) continue;
-                        if (f1.MD5Hash == f2.MD5Hash && f1.Extension == f2.Extension) continue;
+                        if (f1.Extension != f2.Extension) continue; // package+script pairs are commonly companions, NOT conflicts.
+                        if (f1.MD5Hash == f2.MD5Hash) continue;
                         
                         conflicts.Add(new ConflictResult
                         {
                             File1 = f1,
                             File2 = f2,
-                            ConflictType = f1.Extension != f2.Extension ? "Cross-format Conflict" : "Version Conflict",
-                            Description = f1.Extension != f2.Extension ? "Same mod with different formats" : "Different versions of the same mod"
+                            ConflictType = "Possible Version Overlap",
+                            Description = $"Same base name but different contents: {f1.FileName} / {f2.FileName}. Manual review required; not a confirmed conflict."
                         });
                     }
                 }
             }
             
-            var result = conflicts.Take(30).ToList();
+            var result = conflicts; // Do not hide results behind an arbitrary limit.
             OnStatusChanged?.Invoke($"Found {result.Count} conflicts");
             return result;
         }

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 
@@ -9,50 +9,49 @@ namespace CCSuitePro.Services
 {
     public class LanguageService : INotifyPropertyChanged
     {
-        private static LanguageService _instance;
+        private static LanguageService? _instance;
         public static LanguageService Instance => _instance ??= new LanguageService();
-        
-        private Dictionary<string, string> _strings = new();
+        private Dictionary<string, string> _strings = new(StringComparer.OrdinalIgnoreCase);
+        private Dictionary<string, string> _english = new(StringComparer.OrdinalIgnoreCase);
         private string _currentLanguage = "en";
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-        
+        public event PropertyChangedEventHandler? PropertyChanged;
         public string CurrentLanguage
         {
             get => _currentLanguage;
-            set { _currentLanguage = value; LoadLanguage(value); OnPropertyChanged(); }
+            set
+            {
+                var next = value is "en" or "es" or "ko" ? value : "en";
+                if (_currentLanguage == next && _strings.Count > 0) return;
+                _currentLanguage = next;
+                LoadLanguage(next); // LoadLanguage notifies all WPF indexer bindings.
+            }
         }
-        
-        public string this[string key]
+        public string this[string key] => _strings.TryGetValue(key, out var text)
+            ? text : _english.TryGetValue(key, out var fallback) ? fallback : key;
+        private LanguageService() { _english = ReadLanguage("en"); _strings = _english; }
+        private static Dictionary<string, string> ReadLanguage(string lang)
         {
-            get => _strings.ContainsKey(key) ? _strings[key] : key;
+            string file = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Languages", $"{lang}.json");
+            if (!File.Exists(file)) file = Path.Combine(Directory.GetCurrentDirectory(), "Languages", $"{lang}.json");
+            try { return File.Exists(file)
+                ? JsonConvert.DeserializeObject<Dictionary<string, string>>(File.ReadAllText(file)) ?? new()
+                : new(); }
+            catch { return new(); }
         }
-        
-        private LanguageService()
-        {
-            LoadLanguage("en");
-        }
-        
         public void LoadLanguage(string lang)
         {
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Languages", $"{lang}.json");
-            if (!File.Exists(path)) path = Path.Combine(Directory.GetCurrentDirectory(), "Languages", $"{lang}.json");
-            if (!File.Exists(path)) return;
-            
-            var json = File.ReadAllText(path);
-            _strings = JsonConvert.DeserializeObject<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
+            _currentLanguage = lang is "en" or "es" or "ko" ? lang : "en";
+            _english = ReadLanguage("en");
+            _strings = _currentLanguage == "en" ? _english : ReadLanguage(_currentLanguage);
+            OnPropertyChanged(nameof(CurrentLanguage));
+            OnPropertyChanged("Item[]");
         }
-        
         public string Get(string key, params object[] args)
         {
-            var text = this[key];
-            if (args.Length > 0) text = string.Format(text, args);
-            return text;
+            string value = this[key];
+            return args.Length == 0 ? value : string.Format(System.Globalization.CultureInfo.CurrentCulture, value, args);
         }
-        
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-        }
+        protected void OnPropertyChanged([CallerMemberName] string? name = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
