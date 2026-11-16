@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Newtonsoft.Json;
 
@@ -26,7 +26,7 @@ namespace CCSuitePro.Services
             try
             {
                 var dir = Path.GetDirectoryName(SettingsPath);
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                if (!string.IsNullOrWhiteSpace(dir)) Directory.CreateDirectory(dir);
                 
                 if (File.Exists(SettingsPath))
                 {
@@ -42,7 +42,7 @@ namespace CCSuitePro.Services
             try
             {
                 var dir = Path.GetDirectoryName(SettingsPath);
-                if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
+                if (!string.IsNullOrWhiteSpace(dir)) Directory.CreateDirectory(dir);
                 
                 var json = JsonConvert.SerializeObject(_current, Formatting.Indented);
                 File.WriteAllText(SettingsPath, json);

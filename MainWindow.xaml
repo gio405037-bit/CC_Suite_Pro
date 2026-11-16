@@ -1,139 +1,776 @@
-﻿<Window x:Class="CCSuitePro.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="CC Suite Pro - by Megarorun" Height="750" Width="1280"
-        MinHeight="600" MinWidth="900"
-        WindowStartupLocation="CenterScreen"
-        WindowStyle="None" AllowsTransparency="True"
-        Background="Transparent">
-    
-    <Border Background="#0D1117" CornerRadius="12">
-        <Border.Effect><DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.5"/></Border.Effect>
-        <Grid>
-            <Grid.RowDefinitions><RowDefinition Height="32"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-            
-            <Grid Grid.Row="0" Background="#161B22" MouseDown="TitleBar_MouseDown">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-                    
-                    <TextBlock Text="CC Suite Pro" Foreground="#E6EDF3" FontSize="12" FontWeight="SemiBold"/>
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="_" Click="MinimizeWindow" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#8B949E" Width="46" Height="32" FontSize="14" Cursor="Hand"/>
-                    <Button Content="[]" Click="MaximizeWindow" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#8B949E" Width="46" Height="32" FontSize="14" Cursor="Hand"/>
-                    <Button Content="X" Click="CloseWindow" Style="{StaticResource MaterialDesignFlatButton}" Foreground="#8B949E" Width="46" Height="32" FontSize="14" Cursor="Hand"/>
-                </StackPanel>
-            </Grid>
-            
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="260"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
-                
-                <!-- SIDEBAR -->
-                <Border Grid.Column="0" Background="#161B22">
-                    <StackPanel Margin="0,20,0,0">
-                        <StackPanel Margin="20,0,20,30"><TextBlock Text="CC SUITE" Foreground="#58A6FF" FontSize="24" FontWeight="Bold"/><TextBlock Text="PROFESSIONAL" Foreground="#8B949E" FontSize="12" Margin="0,4,0,0"/></StackPanel>
-                        <Border Height="1" Background="#21262D" Margin="16,0,16,20"/>
-                        <TextBlock Text="LIBRARY" Tag="library" Foreground="#484F58" FontSize="10" FontWeight="Bold" Margin="20,0,0,10"/>
-                        
-                        <Button Style="{StaticResource SidebarButton}" Click="SwitchTab" Tag="0"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ViewDashboard" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Dashboard" Tag="dashboard"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Click="SwitchTab" Tag="1"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FileMultiple" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="All Files" Tag="all_files"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Click="SwitchTab" Tag="2"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Duplicates" Tag="duplicates"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Click="SwitchTab" Tag="3"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AlertCircle" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Conflicts" Tag="conflicts"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Click="SwitchTab" Tag="4"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Broom" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Cleaner" Tag="cleaner"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Click="SwitchTab" Tag="5"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Cog" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Settings" Tag="settings"/></StackPanel></Button>
-                        
-                        <TextBlock Text="TOOLS" Tag="tools" Foreground="#484F58" FontSize="10" FontWeight="Bold" Margin="20,30,0,10"/>
-                        <Button Style="{StaticResource SidebarButton}" Command="{Binding OrganizeCommand}"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FolderMove" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Organize" Tag="organize"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Command="{Binding BackupCommand}"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="BackupRestore" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Backup" Tag="backup"/></StackPanel></Button>
-                        <Button Style="{StaticResource SidebarButton}" Command="{Binding ScanCommand}"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Refresh" Width="18" Height="18" VerticalAlignment="Center" Margin="0,0,12,0"/><TextBlock Text="Refresh Scan" Tag="refresh_scan"/></StackPanel></Button>
-                        
-                        <StackPanel Margin="20,40,20,20">
-                            <Border Background="#0D1117" CornerRadius="8" Padding="12" BorderBrush="#21262D" BorderThickness="1">
-                                <StackPanel>
-                                    <TextBlock Text="CC Suite Pro" Foreground="#E6EDF3" FontSize="12" FontWeight="SemiBold"/>
-                                    <TextBlock Text="v2.0 Beta &quot;Post Genesis&quot;" Foreground="#58A6FF" FontSize="11" Margin="0,4,0,0"/>
-                                    <TextBlock Text="by Megarorun" Foreground="#8B949E" FontSize="10" Margin="0,2,0,0"/>
-                                    <TextBlock Text="Free and Open Source" Foreground="#484F58" FontSize="10" Margin="0,8,0,0"/>
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-                
-                <!-- CONTENT -->
-                <Grid Grid.Column="1" Background="#0D1117">
-                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-                    
-                    <Border Grid.Row="0" Background="#161B22" Padding="20,16" BorderBrush="#21262D" BorderThickness="0,0,0,1">
-                        <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0"><TextBlock Text="Library" Foreground="#E6EDF3" FontSize="20" FontWeight="Bold"/><TextBlock Text="{Binding StatusMessage}" Foreground="#8B949E" FontSize="12" Margin="0,4,0,0"/></StackPanel>
-                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                                <Border Background="#0D1117" CornerRadius="6" BorderBrush="#21262D" BorderThickness="1" Width="250" Height="36" Margin="0,0,12,0"><TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Foreground="#E6EDF3" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" FontSize="13" Margin="12,0"/></Border>
-                                <Button Content="+ Add Mods" Style="{StaticResource ActionButton}" Command="{Binding InstallModsCommand}"/>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
-                    
-                    <WrapPanel Grid.Row="1" Margin="20,16,20,0">
-                        <Border Style="{StaticResource StatsCard}" Width="180"><StackPanel><TextBlock Text="FILES" Foreground="#8B949E" FontSize="10" FontWeight="Bold"/><TextBlock Text="{Binding TotalFiles}" Foreground="#58A6FF" FontSize="28" FontWeight="Bold"/></StackPanel></Border>
-                        <Border Style="{StaticResource StatsCard}" Width="180"><StackPanel><TextBlock Text="SIZE" Foreground="#8B949E" FontSize="10" FontWeight="Bold"/><TextBlock Text="{Binding TotalSizeFormatted, Mode=OneWay}" Foreground="#D29922" FontSize="28" FontWeight="Bold"/></StackPanel></Border>
-                        <Border Style="{StaticResource StatsCard}" Width="180"><StackPanel><TextBlock Text="DUPS" Foreground="#8B949E" FontSize="10" FontWeight="Bold"/><TextBlock Text="{Binding DuplicateCount, Mode=OneWay}" Foreground="#D29922" FontSize="28" FontWeight="Bold"/></StackPanel></Border>
-                        <Border Style="{StaticResource StatsCard}" Width="180"><StackPanel><TextBlock Text="CONFLICTS" Foreground="#8B949E" FontSize="10" FontWeight="Bold"/><TextBlock Text="{Binding ConflictCount, Mode=OneWay}" Foreground="#DA3633" FontSize="28" FontWeight="Bold"/></StackPanel></Border>
-                    </WrapPanel>
-                    
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,8,0,0"
-                        Visibility="{Binding IsScanning, Converter={StaticResource BooleanToVisibilityConverter}}">
-                            <ProgressBar Style="{StaticResource CircularSpinner}" Margin="0,0,10,0"/>
-                            <TextBlock Text="Scanning..." Foreground="#58A6FF" FontSize="13" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    
-                    <TabControl Grid.Row="2" x:Name="MainTabs" Background="Transparent" BorderThickness="0" Margin="20,12,20,20">
-                        <TabControl.Resources><Style TargetType="TabItem"><Setter Property="Visibility" Value="Collapsed"/></Style></TabControl.Resources>
-                        
-                        <!-- TAB 0: Dashboard -->
-                        <TabItem><Border Background="#161B22" CornerRadius="8" Padding="30" Margin="0,8,0,0"><StackPanel>
-                            <TextBlock Text="Welcome to CC Suite Pro" Foreground="#E6EDF3" FontSize="28" FontWeight="Bold"/>
-                            <TextBlock Text="Your Sims 4 Mod Manager" Foreground="#8B949E" FontSize="16" Margin="0,8,0,30"/>
-                            <Button Content="Get Started" Style="{StaticResource ActionButton}" Width="300" Height="44" Command="{Binding InstallModsCommand}"/>
-                            <TextBlock Text="Created by Megarorun" Foreground="#58A6FF" FontSize="14" Margin="0,40,0,0"/>
-                        </StackPanel></Border></TabItem>
-                        
-                        <!-- TAB 1: All Files -->
-                        <TabItem><Border Background="#161B22" CornerRadius="8" Margin="0,8,0,0"><ListView ItemsSource="{Binding ModFiles}" Background="Transparent" BorderThickness="0" Foreground="#C9D1D9"><ListView.View><GridView><GridViewColumn Header="NAME" Width="400" DisplayMemberBinding="{Binding FileName}"/><GridViewColumn Header="SIZE" Width="100" DisplayMemberBinding="{Binding FileSizeFormatted}"/><GridViewColumn Header="TYPE" Width="100" DisplayMemberBinding="{Binding Extension}"/><GridViewColumn Header="CATEGORY" Width="150" DisplayMemberBinding="{Binding Category}"/></GridView></ListView.View></ListView></Border></TabItem>
-                        
-                        <!-- TAB 2: Duplicates -->
-                        <TabItem><Border Background="#161B22" CornerRadius="8" Padding="20" Margin="0,8,0,0"><ScrollViewer><StackPanel><TextBlock Text="Duplicate Files" Foreground="#E6EDF3" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/><TextBlock Foreground="#D29922" FontSize="14" Margin="0,0,0,20"><Run Text="Found "/><Run Text="{Binding DuplicateCount, Mode=OneWay}"/><Run Text=" groups"/></TextBlock><ItemsControl ItemsSource="{Binding DuplicateGroups}"><ItemsControl.ItemTemplate><DataTemplate><Border Background="#0D1117" CornerRadius="8" Padding="16" Margin="0,0,0,8"><StackPanel><TextBlock Foreground="#E6EDF3" FontWeight="SemiBold"><Run Text="{Binding Files.Count}"/><Run Text=" files"/></TextBlock><ItemsControl ItemsSource="{Binding Files}"><ItemsControl.ItemTemplate><DataTemplate><TextBlock Text="{Binding FileName}" Foreground="#8B949E" FontSize="12" Margin="0,2,0,0"/></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl></StackPanel></ScrollViewer></Border></TabItem>
-                        
-                        <!-- TAB 3: Conflicts -->
-                        <TabItem><Border Background="#161B22" CornerRadius="8" Padding="20" Margin="0,8,0,0"><ScrollViewer><StackPanel><TextBlock Text="Conflicts" Foreground="#E6EDF3" FontSize="20" FontWeight="Bold" Margin="0,0,0,20"/><TextBlock Foreground="#DA3633" FontSize="14" Margin="0,0,0,20"><Run Text="Found "/><Run Text="{Binding ConflictCount, Mode=OneWay}"/><Run Text=" conflicts"/></TextBlock><ListBox ItemsSource="{Binding Conflicts}" Background="Transparent" BorderThickness="0"><ListBox.ItemTemplate><DataTemplate><Border Background="#0D1117" CornerRadius="8" Padding="16" Margin="0,0,0,8"><StackPanel><TextBlock Text="{Binding ConflictType}" Foreground="#DA3633" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,8"/><TextBlock Text="{Binding Description}" Foreground="#8B949E" FontSize="12" TextWrapping="Wrap"/></StackPanel></Border></DataTemplate></ListBox.ItemTemplate></ListBox></StackPanel></ScrollViewer></Border></TabItem>
-                        
-                        
-                        
-<!-- TAB 4: Cleaner -->
-                        <TabItem><Border Background="#161B22" CornerRadius="8" Padding="30" Margin="0,8,0,0"><StackPanel><TextBlock Text="Junk Cleaner" Foreground="#E6EDF3" FontSize="24" FontWeight="Bold" Margin="0,0,0,8"/><TextBlock Text="{Binding CleanStatus, Mode=OneWay}" Foreground="#8B949E" FontSize="14" Margin="0,0,0,20"/><StackPanel Orientation="Horizontal" Margin="0,0,0,20"><Button Content="Scan" Style="{StaticResource ActionButton}" Command="{Binding ScanJunkCommand}" Width="140" Height="40" Margin="0,0,10,0"/><Button Content="Clean All" Style="{StaticResource ActionButton}" Command="{Binding CleanAllCommand}" Width="120" Height="40"/></StackPanel><TextBlock Text="Cache, Empty, Temp, Corrupted files" Foreground="#484F58" FontSize="12"/></StackPanel></Border></TabItem>
-                        
-                        <!-- TAB 5: Settings -->
-                        <TabItem><Border Background="#161B22" CornerRadius="8" Padding="30" Margin="0,8,0,0"><ScrollViewer><StackPanel>
-                            <TextBlock Text="Settings" Foreground="#E6EDF3" FontSize="24" FontWeight="Bold" Margin="0,0,0,30"/>
-                            <TextBlock Text="Mods Folder" Foreground="#8B949E" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
-                            <Grid Margin="0,0,0,20"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBox Text="{Binding ModsFolderPath, Mode=OneWay}" Foreground="#E6EDF3" Background="#0D1117" BorderBrush="#21262D" BorderThickness="1" Height="36" IsReadOnly="True" VerticalContentAlignment="Center"/><Button Grid.Column="1" Content="Browse" Style="{StaticResource ActionButton}" Command="{Binding SelectModsFolderCommand}" Width="100" Height="36" Margin="10,0,0,0"/></Grid>
-                            <TextBlock Text="Cache Folder" Foreground="#8B949E" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
-                            <Grid Margin="0,0,0,20"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBox Text="{Binding CacheFolderPath, Mode=OneWay}" Foreground="#E6EDF3" Background="#0D1117" BorderBrush="#21262D" BorderThickness="1" Height="36" IsReadOnly="True" VerticalContentAlignment="Center"/><Button Grid.Column="1" Content="Browse" Style="{StaticResource ActionButton}" Command="{Binding SelectCacheFolderCommand}" Width="100" Height="36" Margin="10,0,0,0"/></Grid>
-                            <TextBlock Text="Language" Foreground="#8B949E" FontSize="12" FontWeight="Bold" Margin="0,0,0,8"/>
-                            <Border Background="#0D1117" BorderBrush="#21262D" BorderThickness="1" CornerRadius="4" Width="200" HorizontalAlignment="Left" Margin="0,0,0,20">
-                                <ComboBox SelectedIndex="{Binding SelectedLanguageIndex}" Foreground="#E6EDF3" Background="Transparent" BorderThickness="0" Height="34">
-                                    <ComboBoxItem Content="English"/>
-                                    <ComboBoxItem Content="Espanol"/>
-                                    <ComboBoxItem Content="Korean"/>
-                                </ComboBox>
-                            </Border>
-                            <Button Content="Save Settings" Style="{StaticResource ActionButton}" Command="{Binding SaveSettingsCommand}" Width="160" Height="40" Margin="0,20,0,0"/>
-                            <TextBlock Text="Restart required to apply language" Foreground="#DA3633" FontSize="11" Margin="0,10,0,0"/>
-                        </StackPanel></ScrollViewer></Border></TabItem>
-                    </TabControl>
-                </Grid>
-            </Grid>
-        </Grid>
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:services="clr-namespace:CCSuitePro.Services" xmlns:primitives="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework" x:Class="CCSuitePro.MainWindow" Title="CC Suite Pro" Width="1400" Height="880" MinWidth="1050" MinHeight="690" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" Background="Transparent" Loaded="UX24_OnLoaded">
+ <Window.Resources>
+  <Style x:Key="Card" TargetType="Border">
+   <Setter Property="CornerRadius" Value="16"/>
+   <Setter Property="Background" Value="{DynamicResource Theme.Brush.10182B}"/>
+   <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.223451}"/>
+   <Setter Property="BorderThickness" Value="1"/>
+   <Setter Property="Padding" Value="20"/>
+  </Style>
+  <Style x:Key="Nav" TargetType="Button">
+   <Setter Property="Height" Value="44"/>
+   <Setter Property="Background" Value="Transparent"/>
+   <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.A9BBD8}"/>
+   <Setter Property="BorderThickness" Value="1"/>
+   <Setter Property="BorderBrush" Value="Transparent"/>
+   <Setter Property="HorizontalContentAlignment" Value="Left"/>
+   <Setter Property="Padding" Value="14,0"/>
+   <Setter Property="Margin" Value="0,2,0,2"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="Bd" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="11" Padding="{TemplateBinding Padding}">
+       <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="BorderBrush" Value="{DynamicResource Theme.Brush.3E66A0}"/></Trigger>
+       <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+  <Style x:Key="Primary" TargetType="Button">
+   <Setter Property="Background" Value="{DynamicResource Theme.Brush.2161EC}"/>
+   <Setter Property="Foreground" Value="White"/>
+   <Setter Property="FontWeight" Value="SemiBold"/>
+   <Setter Property="Height" Value="42"/>
+   <Setter Property="Padding" Value="18,0"/>
+   <Setter Property="BorderThickness" Value="0"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="11" Padding="{TemplateBinding Padding}">
+       <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Bd" Property="Opacity" Value="0.36"/></Trigger>
+       <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Opacity" Value="0.85"/></Trigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+  <Style x:Key="Secondary" TargetType="Button" BasedOn="{StaticResource Primary}">
+   <Setter Property="Background" Value="{DynamicResource Theme.Brush.1A2A42}"/>
+   <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.DDE9FC}"/>
+  </Style>
+  <!-- Explicit height and template prevent the global MaterialDesign Button style
+       from clipping multi-line findings in the dashboard. -->
+  <Style x:Key="FindingAction" TargetType="Button">
+   <Setter Property="MinHeight" Value="76"/>
+   <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+   <Setter Property="Padding" Value="16,11"/>
+   <Setter Property="Margin" Value="0,0,0,10"/>
+   <Setter Property="Background" Value="{DynamicResource Theme.Brush.0D1B32}"/>
+   <Setter Property="BorderBrush" Value="{DynamicResource Theme.Brush.29466D}"/>
+   <Setter Property="BorderThickness" Value="1"/>
+   <Setter Property="Cursor" Value="Hand"/>
+   <Setter Property="Template">
+    <Setter.Value>
+     <ControlTemplate TargetType="Button">
+      <Border x:Name="FindingSurface" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="12" Padding="{TemplateBinding Padding}">
+       <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+      </Border>
+      <ControlTemplate.Triggers>
+       <Trigger Property="IsMouseOver" Value="True">
+        <Setter TargetName="FindingSurface" Property="Background" Value="{DynamicResource Theme.Brush.132645}"/>
+        <Setter TargetName="FindingSurface" Property="BorderBrush" Value="{DynamicResource Theme.Brush.4779C2}"/>
+       </Trigger>
+       <Trigger Property="IsKeyboardFocused" Value="True">
+        <Setter TargetName="FindingSurface" Property="BorderBrush" Value="{DynamicResource Theme.Brush.76B3FF}"/>
+       </Trigger>
+      </ControlTemplate.Triggers>
+     </ControlTemplate>
+    </Setter.Value>
+   </Setter>
+  </Style>
+  <Style x:Key="ScanStateTag" TargetType="TextBlock">
+   <Setter Property="Text" Value="STANDBY"/>
+   <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.A9BEDB}"/>
+   <Style.Triggers>
+    <DataTrigger Binding="{Binding IsScanning}" Value="True">
+     <Setter Property="Text" Value="SCANNING"/>
+     <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.75BDFF}"/>
+    </DataTrigger>
+   </Style.Triggers>
+  </Style>
+  <Style x:Key="ScanWorkingNote" TargetType="TextBlock">
+   <Setter Property="Visibility" Value="Collapsed"/>
+   <Style.Triggers><DataTrigger Binding="{Binding IsScanning}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers>
+  </Style>
+  <Style x:Key="ScanIdleNote" TargetType="TextBlock">
+   <Setter Property="Visibility" Value="Visible"/>
+   <Style.Triggers><DataTrigger Binding="{Binding IsScanning}" Value="True"><Setter Property="Visibility" Value="Collapsed"/></DataTrigger></Style.Triggers>
+  </Style>
+  <Style x:Key="EmptyAINote" TargetType="TextBlock">
+   <Setter Property="Visibility" Value="Collapsed"/>
+   <Style.Triggers><DataTrigger Binding="{Binding AIReviewCount}" Value="0"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers>
+  </Style>
+  <Style x:Key="Stat" TargetType="TextBlock">
+   <Setter Property="FontSize" Value="28"/>
+   <Setter Property="FontWeight" Value="Bold"/>
+   <Setter Property="Foreground" Value="White"/>
+  </Style>
+  <Style x:Key="TitleControl" TargetType="Button">
+   <Setter Property="Width" Value="42"/><Setter Property="Height" Value="30"/>
+   <Setter Property="Foreground" Value="{DynamicResource Theme.Brush.A9BBD8}"/><Setter Property="Background" Value="Transparent"/>
+   <Setter Property="BorderThickness" Value="0"/><Setter Property="Cursor" Value="Hand"/>
+  </Style>
+  <Style x:Key="ShowOnlyScanning" TargetType="ProgressBar">
+   <Setter Property="Visibility" Value="Collapsed"/>
+   <Style.Triggers><DataTrigger Binding="{Binding IsScanning}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers>
+  </Style>
+  <Style x:Key="EmptyPreview" TargetType="TextBlock">
+   <Setter Property="Visibility" Value="Collapsed"/>
+   <Style.Triggers>
+    <DataTrigger Binding="{Binding OrganizePreview}" Value=""><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+    <DataTrigger Binding="{Binding OrganizePreview}" Value="{x:Null}"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+   </Style.Triggers>
+  </Style>
+  <Style x:Key="SearchHint" TargetType="TextBlock">
+   <Setter Property="Visibility" Value="Collapsed"/>
+   <Style.Triggers>
+    <DataTrigger Binding="{Binding SearchText}" Value=""><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+    <DataTrigger Binding="{Binding SearchText}" Value="{x:Null}"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+   </Style.Triggers>
+  </Style>
+ </Window.Resources>
+
+ <Grid>
+  <Border x:Name="Shell" Margin="8" Background="{DynamicResource CCSuite.Background.ShellGradient}" CornerRadius="22" BorderBrush="{DynamicResource Theme.Brush.233653}" BorderThickness="1">
+   <Grid>
+    <Grid.RowDefinitions><RowDefinition Height="36"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+    <Grid Grid.Row="0" MouseDown="TitleBar_MouseDown" Background="Transparent" Margin="12,0,12,0">
+     <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+     <TextBlock Text="CC Suite Pro" VerticalAlignment="Center" Foreground="{DynamicResource Theme.Brush.DDE9FC}" FontSize="12" FontWeight="SemiBold" Margin="10,0,0,0"/>
+     <StackPanel Grid.Column="1" Orientation="Horizontal">
+      <Button Content="?" Click="OpenTutorial_Click" Style="{StaticResource TitleControl}" ToolTip="{Binding [onboarding_open], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+      <Button Content="_" Click="MinimizeWindow" Style="{StaticResource TitleControl}" ToolTip="{Binding [ui_minimize_1c5b7], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+      <Button Content="□" Click="MaximizeWindow" Style="{StaticResource TitleControl}" ToolTip="{Binding [ui_maximize_restore_013c1], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+      <Button Content="X" Click="CloseWindow" Style="{StaticResource TitleControl}" ToolTip="{Binding [ui_close_bbfa7], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+     </StackPanel>
+    </Grid>
+    <Grid Grid.Row="1" Margin="14,8,14,14">
+     <Grid.ColumnDefinitions><ColumnDefinition Width="224"/><ColumnDefinition Width="16"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+
+     <!-- Clear, labelled navigation (accessible without guessing icon meaning). -->
+     <Border Grid.Column="0" Style="{StaticResource Card}" Padding="12,12,12,12">
+ <DockPanel LastChildFill="True">
+  <StackPanel DockPanel.Dock="Top" Margin="6,3,6,15" Orientation="Horizontal">
+   <!-- WinterIdentity40Sidebar: use the same packaged artwork as SplashWindow. -->
+   <Image Source="pack://application:,,,/Resources/WinterSplashLogo.png" Width="58" Height="58"
+          Stretch="Uniform" SnapsToDevicePixels="True" RenderOptions.BitmapScalingMode="HighQuality"
+          HorizontalAlignment="Left" VerticalAlignment="Center" ToolTip="CC Suite Pro - Winter Edition 2026" />
+   <StackPanel Margin="7,0,0,0" VerticalAlignment="Center">
+      <TextBlock Text="CC SUITE" Foreground="White" FontSize="17" FontWeight="Bold" />
+      <TextBlock Text="{Binding [ui_mod_manager_7b99f], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                 Foreground="{DynamicResource Theme.Brush.70AFFF}" FontSize="9" FontWeight="SemiBold" Margin="0,4,0,0" />
+   </StackPanel>
+</StackPanel>
+  <Border DockPanel.Dock="Bottom" Background="{DynamicResource Theme.Brush.0C1627}" CornerRadius="10" Padding="12" Margin="0,14,0,0">
+   <StackPanel>
+    <TextBlock Text="CC Suite Pro" Foreground="{DynamicResource Theme.Brush.DBE8FF}" FontSize="12" FontWeight="SemiBold"/>
+    <TextBlock Text="v2.0 Stable - Winter 2026" Foreground="{DynamicResource Theme.Brush.718AAD}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap" MaxWidth="174" ToolTip="CC Suite Pro v2.0 Stable - Winter Edition 2026" />
+   </StackPanel>
+  </Border>
+  <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+   <StackPanel>
+    <TextBlock Text="{Binding [ui_explore_ae26c], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.718AAD}" FontWeight="SemiBold" FontSize="11" Margin="12,0,0,10"/>
+    <Button x:Name="Nav0" Style="{StaticResource Nav}" Click="SwitchTab" Tag="0" ToolTip="{Binding [ui_dashboard_and_next_steps_ab1c2], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ViewDashboard" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [dashboard], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Button x:Name="Nav1" Style="{StaticResource Nav}" Click="SwitchTab" Tag="1" ToolTip="{Binding [ui_all_scanned_files_creators_and_ai_suggestions_c7268], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FileMultiple" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [all_files], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Button x:Name="Nav2" Style="{StaticResource Nav}" Click="SwitchTab" Tag="2" ToolTip="{Binding [ui_review_duplicate_groups_98eae], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [duplicates], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Button x:Name="Nav3" Style="{StaticResource Nav}" Click="SwitchTab" Tag="3" ToolTip="{Binding [ui_review_potential_overlaps_a81d8], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AlertCircle" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [conflicts], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Border Height="1" Background="{DynamicResource Theme.Brush.263852}" Margin="12,13,12,15"/>
+    <TextBlock Text="{Binding [ui_workflow_59d69], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.718AAD}" FontWeight="SemiBold" FontSize="11" Margin="12,0,0,10"/>
+    <Button x:Name="Nav6" Style="{StaticResource Nav}" Click="SwitchTab" Tag="6" ToolTip="{Binding [ui_preview_file_movements_and_organize_safely_b58f7], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="FolderMove" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [organize], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Button x:Name="Nav7" Visibility="Collapsed" Style="{StaticResource Nav}" Click="SwitchTab" Tag="7" ToolTip="{Binding [ui_review_ai_suggestions_and_export_learning_data_c5158], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Brain" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [ui_ai_center_1cd0d], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/></StackPanel></Button>
+    <Button x:Name="Nav4" Style="{StaticResource Nav}" Click="SwitchTab" Tag="4" ToolTip="{Binding [ui_search_for_junk_files_141f1], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Broom" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [cleaner], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Border Height="1" Background="{DynamicResource Theme.Brush.263852}" Margin="12,13,12,15"/>
+    <TextBlock Text="{Binding [ui_other_957c0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.718AAD}" FontWeight="SemiBold" FontSize="11" Margin="12,0,0,10"/>
+    <Button x:Name="Nav5" Style="{StaticResource Nav}" Click="SwitchTab" Tag="5" ToolTip="{Binding [ui_folder_paths_and_language_aad8c], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Cog" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [settings], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Button x:Name="BackupTourTarget" Style="{StaticResource Nav}" Command="{Binding BackupCommand}" ToolTip="{Binding [ui_make_a_safety_backup_of_your_library_660b0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="BackupRestore" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [backup], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
+    <Button x:Name="WinterCapsuleNav" Style="{StaticResource Nav}" Click="OpenTimeCapsule_Click" ToolTip="Library Time Capsule — Winter Edition">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="Time Capsule"/></StackPanel></Button>
+    <Button x:Name="WinterGuardianNav" Style="{StaticResource Nav}" Click="OpenModGuardian_Click" ToolTip="Mod Guardian — review changes between scans">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AlertCircle" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="Mod Guardian"/></StackPanel></Button>
+   </StackPanel>
+  </ScrollViewer>
+ </DockPanel>
+</Border><Grid Grid.Column="2">
+ <Grid.RowDefinitions>
+  <RowDefinition Height="Auto"/>
+  <RowDefinition Height="*"/>
+ </Grid.RowDefinitions>
+ <Grid Grid.Row="0" Margin="4,1,4,16">
+  <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+  <StackPanel>
+   <TextBlock x:Name="UX25_PageTitle" Text="{Binding [ui_dashboard_d87f4], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" FontSize="25" FontWeight="Bold" Foreground="White"/>
+   <TextBlock x:Name="WinterThemeTag" Text="❄  WINTER EDITION 2026" Foreground="#E9A4AD" FontSize="11" FontWeight="SemiBold" Margin="0,5,0,0" Visibility="Collapsed"/>
+   <TextBlock x:Name="UX25_PageDescription" Text="{Binding [ui_your_library_at_a_glance_8bffe], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.ABC1DF}" FontSize="13" Margin="0,4,0,0"/>
+   <TextBlock Text="{Binding ActiveFolderDisplay}" Foreground="{DynamicResource Theme.Brush.709EE2}" FontSize="11" Margin="0,4,0,0" TextTrimming="CharacterEllipsis" MaxWidth="560" HorizontalAlignment="Left" ToolTip="{Binding ActiveFolderDisplay}"/>
+  </StackPanel>
+  <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+   <Button x:Name="RefreshScanTourTarget" Content="{Binding [ui_refresh_scan_736b0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Command="{Binding ScanCommand}" Style="{StaticResource Secondary}" MinWidth="160" Height="42" Padding="18,0" Margin="0,0,10,0"/>
+   <Button Content="{Binding [ui_add_mods_32167], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Command="{Binding InstallModsCommand}" Style="{StaticResource Primary}" MinWidth="160" Height="42" Padding="16,0"/>
+  </StackPanel>
+ </Grid>
+ <TabControl x:Name="MainTabs" Grid.Row="1" Background="Transparent" BorderThickness="0" SelectionChanged="UX24_TabChanged">
+  <TabControl.Resources><Style TargetType="TabItem"><Setter Property="Visibility" Value="Collapsed"/></Style></TabControl.Resources>
+ <TabItem>
+ <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+  <StackPanel Margin="3,0,3,12">
+   <UniformGrid Columns="4" Margin="0,0,0,16">
+    <Border Style="{StaticResource Card}" Margin="0,0,10,0">
+     <StackPanel><TextBlock Text="{Binding [ui_total_files_07457], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" FontSize="11" FontWeight="SemiBold"/><TextBlock Text="{Binding TotalFiles}" Style="{StaticResource Stat}" Margin="0,9,0,2"/><Button Content="{Binding [ui_open_library_b31bf], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Tag="1" Click="SwitchTab" Foreground="{DynamicResource Theme.Brush.88B8FF}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left" Padding="0" Cursor="Hand"/></StackPanel>
     </Border>
+    <Border Style="{StaticResource Card}" Margin="0,0,10,0">
+     <StackPanel><TextBlock Text="{Binding [ui_library_size_0ea9f], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" FontSize="11" FontWeight="SemiBold"/><TextBlock Text="{Binding TotalSizeFormatted}" Style="{StaticResource Stat}" Margin="0,9,0,2"/><TextBlock Text="{Binding [ui_total_scanned_storage_17adc], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.718AAD}" FontSize="11"/></StackPanel>
+    </Border>
+    <Border Style="{StaticResource Card}" Margin="0,0,10,0">
+     <StackPanel><TextBlock Text="{Binding [ui_duplicate_groups_c7aa8], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" FontSize="11" FontWeight="SemiBold"/><TextBlock Text="{Binding DuplicateCount}" Style="{StaticResource Stat}" Foreground="{DynamicResource Theme.Brush.76BCFF}" Margin="0,9,0,2"/><Button Content="{Binding [ui_review_duplicates_aad39], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Click="SwitchTab" Tag="2" Foreground="{DynamicResource Theme.Brush.88B8FF}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left" Padding="0" Cursor="Hand"/></StackPanel>
+    </Border>
+    <Border Style="{StaticResource Card}">
+     <StackPanel><TextBlock Text="{Binding [ui_potential_overlaps_c90ea], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" FontSize="11" FontWeight="SemiBold"/><TextBlock Text="{Binding ConflictCount}" Style="{StaticResource Stat}" Foreground="{DynamicResource Theme.Brush.C4A2FF}" Margin="0,9,0,2"/><Button Content="{Binding [ui_review_conflicts_5415e], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Click="SwitchTab" Tag="3" Foreground="{DynamicResource Theme.Brush.B8A0FB}" Background="Transparent" BorderThickness="0" HorizontalContentAlignment="Left" Padding="0" Cursor="Hand"/></StackPanel>
+    </Border>
+   </UniformGrid>
+   <Grid Margin="0,0,0,16">
+    <Grid.ColumnDefinitions><ColumnDefinition Width="1.25*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
+    <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
+     <StackPanel>
+      <TextBlock Text="{Binding [ui_start_here_54acc], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="19" FontWeight="SemiBold"/>
+      <TextBlock Text="{Binding [ui_1_choose_folder_2_scan_3_review_4_organize_152f8], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.9AB1D1}" TextWrapping="Wrap" FontSize="12" Margin="0,9,0,16"/>
+      <WrapPanel>
+       <Button x:Name="ChooseFolderTourTarget" Content="{Binding [ui_choose_folder_76517], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Primary}" Command="{Binding SelectFolderCommand}" Width="145" Margin="0,0,9,10"/>
+       <Button Content="{Binding [ui_browse_files_91b80], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Click="SwitchTab" Tag="1" Width="135" Margin="0,0,9,10"/>
+       <Button Content="{Binding [ui_organize_c2cb1], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Click="SwitchTab" Tag="6" Width="120" Margin="0,0,9,10"/>
+       <Button Content="{Binding [ui_clear_list_0469c], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Command="{Binding ClearLibraryCommand}" Width="108" ToolTip="{Binding [ui_clear_displayed_scan_results_only_do_not_delete_f42e5], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Margin="0,0,9,10"/>
+      </WrapPanel>
+      <TextBlock Text="{Binding [ui_cc_suite_pro_recommends_reviewing_proposed_chan_aa2ed], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" TextWrapping="Wrap" Foreground="{DynamicResource Theme.Brush.7891B7}" FontSize="11" Margin="0,10,0,0"/>
+     </StackPanel>
+    </Border>
+    <Border Grid.Column="1" Style="{StaticResource Card}">
+     <StackPanel>
+      <Grid>
+       <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+       <TextBlock Text="{Binding [ui_scan_status_5846d], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="19" FontWeight="SemiBold"/>
+       <Border Grid.Column="1" Background="{DynamicResource Theme.Brush.142640}" BorderBrush="{DynamicResource Theme.Brush.2A4972}" BorderThickness="1" CornerRadius="9" Padding="11,6" VerticalAlignment="Center">
+        <TextBlock Style="{StaticResource ScanStateTag}" FontSize="10" FontWeight="Bold" Text="{Binding ScanStateLabel, Mode=OneWay}"/>
+       </Border>
+      </Grid>
+      <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource Theme.Brush.D2E0F4}" FontSize="13" TextWrapping="Wrap" Margin="0,12,0,0"/>
+      <ProgressBar Style="{StaticResource ShowOnlyScanning}" Value="{Binding Progress, Mode=OneWay}" Height="9" Maximum="100" Background="{DynamicResource Theme.Brush.253A59}" Foreground="{DynamicResource Theme.Brush.4B99FF}" Margin="0,16,0,0"/>
+      <TextBlock Style="{StaticResource ScanWorkingNote}" Text="{Binding [ui_scanning_library_file_totals_may_change_until_t_fe097], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A9BEDB}" FontSize="12" TextWrapping="Wrap" Margin="0,13,0,0"/>
+      <TextBlock Style="{StaticResource ScanIdleNote}" Text="{Binding [ui_use_refresh_scan_to_update_results_after_changi_4771f], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A9BEDB}" FontSize="12" TextWrapping="Wrap" Margin="0,13,0,0"/>
+      <TextBlock Text="{Binding [ui_a_completed_scan_does_not_guarantee_game_compat_8b578], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.819BBF}" FontSize="11" TextWrapping="Wrap" Margin="0,9,0,0"/>
+     </StackPanel>
+    </Border>
+   </Grid>
+   <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="1*"/></Grid.ColumnDefinitions>
+    <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
+     <StackPanel>
+      <TextBlock Text="{Binding [ui_review_findings_0d06e], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="19" FontWeight="SemiBold"/>
+      <TextBlock Text="{Binding [ui_inspect_detected_issues_before_changing_your_mo_07a40], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A7BDD9}" FontSize="12" TextWrapping="Wrap" Margin="0,7,0,14"/>
+      <Button Tag="2" Click="SwitchTab" Style="{StaticResource FindingAction}" ToolTip="{Binding [ui_open_duplicate_groups_to_review_identical_files_d0a0c], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+       <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+         <TextBlock Text="{Binding [ui_duplicate_groups_2e4e0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
+         <TextBlock Text="{Binding [ui_review_identical_files_found_by_the_scanner_11463], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A8BEDD}" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,0"/>
+        </StackPanel>
+        <Border Grid.Column="2" Background="{DynamicResource Theme.Brush.122B49}" BorderBrush="{DynamicResource Theme.Brush.2B5A8A}" BorderThickness="1" CornerRadius="11" Padding="11,6" VerticalAlignment="Center" MinWidth="54">
+         <TextBlock Text="{Binding DuplicateCount}" Foreground="{DynamicResource Theme.Brush.7BC6FF}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+        </Border>
+       </Grid>
+      </Button>
+      <Button Tag="3" Click="SwitchTab" Style="{StaticResource FindingAction}" ToolTip="{Binding [ui_open_potential_conflicts_for_review_f2967], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Margin="0">
+       <Grid>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" VerticalAlignment="Center">
+         <TextBlock Text="{Binding [ui_potential_conflicts_28a72], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
+         <TextBlock Text="{Binding [ui_inspect_overlapping_mods_before_organizing_cd227], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A8BEDD}" FontSize="12" TextWrapping="Wrap" Margin="0,5,0,0"/>
+        </StackPanel>
+        <Border Grid.Column="2" Background="{DynamicResource Theme.Brush.251A3B}" BorderBrush="{DynamicResource Theme.Brush.49386B}" BorderThickness="1" CornerRadius="11" Padding="11,6" VerticalAlignment="Center" MinWidth="54">
+         <TextBlock Text="{Binding ConflictCount}" Foreground="{DynamicResource Theme.Brush.C8AAFF}" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
+        </Border>
+       </Grid>
+      </Button>
+     </StackPanel>
+    </Border>
+    <Border Grid.Column="1" Style="{StaticResource Card}">
+     <StackPanel>
+      <TextBlock Text="{Binding Title, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="White" FontSize="19" FontWeight="SemiBold"/>
+      <TextBlock Text="{Binding Summary, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A7BDD9}" FontSize="12" TextWrapping="Wrap" Margin="0,7,0,12"/>
+      <Button Click="OpenTimeCapsule_Click" Style="{StaticResource FindingAction}" MinHeight="64" Margin="0,0,0,10" ToolTip="Library Time Capsule — Winter Edition">
+       <DockPanel LastChildFill="True">
+        <materialDesign:PackIcon Kind="ContentCopy" Width="20" Height="20" Foreground="{DynamicResource Theme.Brush.88B8FF}" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,14,0"/>
+        <StackPanel VerticalAlignment="Center">
+         <TextBlock Text="Time Capsule" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
+         <TextBlock Text="{Binding CapsuleHint, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A8BEDD}" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0"/>
+        </StackPanel>
+       </DockPanel>
+      </Button>
+      <Button Click="OpenModGuardian_Click" Style="{StaticResource FindingAction}" MinHeight="64" Margin="0">
+       <DockPanel LastChildFill="True">
+        <materialDesign:PackIcon Kind="AlertCircle" Width="20" Height="20" Foreground="{DynamicResource Theme.Brush.88B8FF}" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,14,0"/>
+        <StackPanel VerticalAlignment="Center">
+         <TextBlock Text="Mod Guardian" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
+         <TextBlock Text="{Binding GuardianHint, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A8BEDD}" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0"/>
+        </StackPanel>
+       </DockPanel>
+      </Button>
+      <TextBlock Text="{Binding AIHint, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.7891B7}" FontSize="10" TextWrapping="Wrap" Margin="0,11,0,0"/>
+     </StackPanel>
+    </Border>
+   </Grid>
+  </StackPanel>
+ </ScrollViewer>
+</TabItem><TabItem>
+ <Grid Margin="3,0,3,4">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+  <Border Grid.Row="0" Style="{StaticResource Card}" Margin="0,0,0,12" Padding="15">
+   <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="270"/></Grid.ColumnDefinitions>
+    <StackPanel>
+     <TextBlock Text="{Binding [ui_all_scanned_files_62d60], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="18" FontWeight="SemiBold"/>
+     <TextBlock Text="{Binding [ui_creator_category_and_ai_suggestions_are_shown_s_9f1db], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" Margin="0,5,0,0" FontSize="11" TextWrapping="Wrap"/>
+     <TextBlock Text="{Binding [rc32_table_scroll_hint], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.7A91B7}" Margin="0,4,0,0" FontSize="10" TextWrapping="Wrap"/>
+    </StackPanel>
+    <Grid Grid.Column="1" Height="38" Margin="12,0,0,0" VerticalAlignment="Center">
+     <Border Background="{DynamicResource Theme.Brush.0A1426}" BorderBrush="{DynamicResource Theme.Brush.253A59}" BorderThickness="1" CornerRadius="10"/>
+     <TextBlock Text="{Binding [ui_search_name_creator_or_category_64816], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource SearchHint}" Foreground="{DynamicResource Theme.Brush.657E9D}" Margin="12,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False" FontSize="12"/>
+     <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding [ui_filter_scanned_files_e99d8], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Background="Transparent" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" Padding="10,0"/>
+    </Grid>
+   </Grid>
+  </Border>
+  <Border Grid.Row="1" Style="{StaticResource Card}" Padding="8">
+   <ListView VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.VirtualizationMode="Recycling" ScrollViewer.CanContentScroll="True" ItemsSource="{Binding ModFiles}" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource Theme.Brush.D7E6FF}" ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Auto">
+    <ListView.View>
+     <GridView>
+      <GridViewColumn Header="{Binding [ui_name_a9d37], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="360" DisplayMemberBinding="{Binding FileName}"/>
+      <GridViewColumn Header="{Binding [ui_size_88087], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="118" DisplayMemberBinding="{Binding FileSizeFormatted, Mode=OneWay}"/>
+      <GridViewColumn Header="{Binding [ui_type_6e981], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="110" DisplayMemberBinding="{Binding Extension}"/>
+      <GridViewColumn Header="{Binding [ui_category_76225], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="175" DisplayMemberBinding="{Binding CategoryDisplay, Mode=OneWay}"/>
+      <GridViewColumn Header="{Binding [ui_creator_081c2], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="165" DisplayMemberBinding="{Binding CreatorDisplay, Mode=OneWay}"/>
+      <GridViewColumn Header="{Binding [ui_ai_suggestion_c8cd3], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="220" DisplayMemberBinding="{Binding AISuggestedCategoryDisplay, Mode=OneWay}"/>
+      <GridViewColumn Header="{Binding [ui_model_score_c30f0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="155" DisplayMemberBinding="{Binding AIScoreDisplay}"/>
+      <GridViewColumn Header="{Binding [ui_review_ed691], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="135" DisplayMemberBinding="{Binding AIReviewStateDisplay, Mode=OneWay}"/>
+      <GridViewColumn Header="{Binding [ui_why_2b7b6], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="380" DisplayMemberBinding="{Binding AIExplanationDisplay, Mode=OneWay}"/>
+     </GridView>
+    </ListView.View>
+   </ListView>
+  </Border>
+ </Grid>
+</TabItem><TabItem>
+                                <Border Style="{StaticResource Card}">
+                                    <ScrollViewer>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding [ui_duplicate_groups_07ac6], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                            <TextBlock Foreground="{DynamicResource Theme.Brush.8AA1C7}" Margin="0,0,0,18"><Run Text="{Binding [rc32_duplicate_count_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/><Run Text="{Binding DuplicateCount, Mode=OneWay}"/></TextBlock>
+                                            <TextBlock Text="{Binding [ui_no_duplicate_groups_were_reported_scan_your_fol_8aecc], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" TextWrapping="Wrap" Margin="0,4,0,14"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding DuplicateCount}" Value="0"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+<ItemsControl ItemsSource="{Binding DuplicateGroups}">
+ <ItemsControl.ItemTemplate>
+  <DataTemplate>
+   <Border Background="{DynamicResource Theme.Brush.0C162A}" BorderBrush="{DynamicResource Theme.Brush.1C3152}" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,0,0,10">
+    <StackPanel>
+     <Grid Margin="0,0,0,10">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel>
+       <TextBlock Foreground="White" FontWeight="SemiBold"><Run Text="{Binding Files.Count, Mode=OneWay}"/><Run Text="{Binding [ui_byte_identical_files_a5f0c], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/></TextBlock>
+       <TextBlock Foreground="{DynamicResource Theme.Brush.718AAD}" FontSize="10" Margin="0,4,0,0"><Run Text="MD5: "/><Run Text="{Binding MD5Hash}"/></TextBlock>
+      </StackPanel>
+      <Button Grid.Column="1" Content="{Binding [ui_keep_newest_remove_extras_6fe05], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Padding="12,0" MinWidth="205" Command="{Binding DataContext.QuarantineDuplicateGroupCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" ToolTip="{Binding [ui_re_checks_bytes_and_keeps_the_newest_copy_f40c0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+     </Grid>
+     <ItemsControl ItemsSource="{Binding Files}">
+      <ItemsControl.ItemTemplate>
+       <DataTemplate>
+        <Grid Margin="0,5,0,5">
+         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+         <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{Binding FileName}" Foreground="{DynamicResource Theme.Brush.DCE8FA}" FontSize="12" FontWeight="SemiBold" TextWrapping="Wrap"/>
+          <TextBlock Text="{Binding FilePath}" Foreground="{DynamicResource Theme.Brush.718AAD}" FontSize="10" TextWrapping="Wrap" Margin="0,2,8,0"/>
+          <TextBlock Foreground="{DynamicResource Theme.Brush.8EA4C7}" FontSize="10"><Run Text="{Binding FileSizeFormatted, Mode=OneWay}"/><Run Text="{Binding [ui_modified_4f14a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/><Run Text="{Binding LastModifiedFormatted, Mode=OneWay}"/></TextBlock>
+         </StackPanel>
+         <Button Grid.Column="1" Content="{Binding [ui_remove_this_copy_a87a6], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Padding="10,0" MinWidth="150" Command="{Binding DataContext.QuarantineDuplicateFileCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" ToolTip="{Binding [ui_moves_only_this_copy_after_a_byte_for_byte_rech_c27eb], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+        </Grid>
+       </DataTemplate>
+      </ItemsControl.ItemTemplate>
+     </ItemsControl>
+    </StackPanel>
+   </Border>
+  </DataTemplate>
+ </ItemsControl.ItemTemplate>
+</ItemsControl>
+   <Border Background="{DynamicResource Theme.Brush.0C162A}" BorderBrush="{DynamicResource Theme.Brush.49394B}" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,8,0,10">
+    <StackPanel>
+     <Grid Margin="0,0,0,8">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBlock Text="{Binding [ui_corrupted_package_review_605eb], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+      <Button Grid.Column="1" Content="{Binding [ui_scan_package_integrity_1798a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Command="{Binding ScanJunkCommand}" Padding="12,0"/>
+     </Grid>
+     <TextBlock Foreground="{DynamicResource Theme.Brush.8AA1C7}" Margin="0,0,0,10"><Run Text="{Binding [ui_suspect_packages_3ecd5], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/><Run Text="{Binding PackageIssueCount, Mode=OneWay}"/></TextBlock>
+     <TextBlock Text="{Binding PackageScanMessage}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8"/>
+     <ItemsControl ItemsSource="{Binding PackageIssues}">
+      <ItemsControl.ItemTemplate>
+       <DataTemplate>
+        <Grid Margin="0,4,0,4">
+         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+         <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{Binding FileName}" Foreground="{DynamicResource Theme.Brush.F0DCE2}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+          <TextBlock Text="{Binding Issue}" Foreground="{DynamicResource Theme.Brush.C3AAB4}" FontSize="10" TextWrapping="Wrap" Margin="0,3,8,0"/>
+         </StackPanel>
+         <Button Grid.Column="1" Content="{Binding [ui_remove_from_mods_eace9], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Padding="9,0" MinWidth="105" Command="{Binding DataContext.QuarantineCorruptedPackageCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" IsEnabled="{Binding CanQuarantine}"/>
+        </Grid>
+       </DataTemplate>
+      </ItemsControl.ItemTemplate>
+     </ItemsControl>
+     <TextBlock Text="{Binding [ui_only_invalid_truncated_dbpf_headers_can_be_quar_09361], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.7D91B2}" FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0"/>
+    </StackPanel>
+   </Border>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Border>
+                            </TabItem>
+
+
+
+<TabItem>
+                                <Border Style="{StaticResource Card}">
+                                    <ScrollViewer>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding [ui_potential_conflicts_75320], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                                            <TextBlock Foreground="{DynamicResource Theme.Brush.8AA1C7}" Margin="0,0,0,18"><Run Text="{Binding [rc32_conflict_count_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/><Run Text="{Binding ConflictCount, Mode=OneWay}"/></TextBlock>
+                                            <TextBlock Text="{Binding [ui_no_overlaps_were_reported_by_the_current_detect_7ad71], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" TextWrapping="Wrap" Margin="0,4,0,14"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding ConflictCount}" Value="0"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+<ListBox ItemsSource="{Binding Conflicts}" Background="Transparent" BorderThickness="0">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="{DynamicResource Theme.Brush.0C162A}" BorderBrush="{DynamicResource Theme.Brush.1C3152}" BorderThickness="1" CornerRadius="14" Padding="16" Margin="0,0,0,10">
+                                                            <StackPanel>
+                                                                <TextBlock Text="{Binding ConflictType}" Foreground="{DynamicResource Theme.Brush.B48BFF}" FontWeight="SemiBold" FontSize="14" Margin="0,0,0,8"/>
+                                                                <TextBlock Text="{Binding Description}" Foreground="{DynamicResource Theme.Brush.C1D3F4}" FontSize="12" TextWrapping="Wrap"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Border>
+                            </TabItem>
+
+
+
+<TabItem>
+ <Border Style="{StaticResource Card}">
+  <ScrollViewer VerticalScrollBarVisibility="Auto">
+   <StackPanel>
+    <TextBlock Text="{Binding [ui_cleaner_00a68], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,8"/>
+    <TextBlock Text="{Binding CleanStatus, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8AA1C7}" Margin="0,0,0,18"/>
+    <WrapPanel>
+     <Button Style="{StaticResource Primary}" Command="{Binding ScanJunkCommand}" Content="{Binding [ui_scan_28cba], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="120" Margin="0,0,10,10"/>
+     <Button Style="{StaticResource Secondary}" Command="{Binding CleanAllCommand}" Content="{Binding [ui_clean_safe_junk_cf3d7], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="150" Margin="0,0,10,10"/>
+    </WrapPanel>
+    <TextBlock Text="{Binding [ui_package_integrity_review_e4a9a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="17" FontWeight="SemiBold" Margin="0,16,0,5"/>
+    <TextBlock Foreground="{DynamicResource Theme.Brush.8AA1C7}" Margin="0,0,0,12"><Run Text="{Binding [ui_suspect_packages_3ecd5], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/><Run Text="{Binding PackageIssueCount, Mode=OneWay}"/></TextBlock>
+    <TextBlock Text="{Binding PackageScanMessage}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" TextWrapping="Wrap" Margin="0,4,0,14"/>
+    <ItemsControl ItemsSource="{Binding PackageIssues}">
+     <ItemsControl.ItemTemplate>
+      <DataTemplate>
+       <Border Background="{DynamicResource Theme.Brush.0C162A}" BorderBrush="{DynamicResource Theme.Brush.49394B}" BorderThickness="1" CornerRadius="12" Padding="13" Margin="0,0,0,9">
+        <Grid>
+         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+         <StackPanel VerticalAlignment="Center">
+          <TextBlock Text="{Binding FileName}" Foreground="{DynamicResource Theme.Brush.F0DCE2}" FontWeight="SemiBold" TextWrapping="Wrap"/>
+          <TextBlock Text="{Binding Issue}" Foreground="{DynamicResource Theme.Brush.C3AAB4}" FontSize="11" TextWrapping="Wrap" Margin="0,4,8,0"/>
+          <TextBlock Text="{Binding FileSizeFormatted, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8294B0}" FontSize="10" Margin="0,3,0,0"/>
+         </StackPanel>
+         <StackPanel Grid.Column="1" VerticalAlignment="Center">
+          <Button Content="{Binding [ui_remove_from_mods_eace9], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Padding="10,0" MinWidth="130" Command="{Binding DataContext.QuarantineCorruptedPackageCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" CommandParameter="{Binding}" IsEnabled="{Binding CanQuarantine}" ToolTip="{Binding [ui_re_checks_the_dbpf_header_and_preserves_the_ori_ed488], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+          <TextBlock Text="{Binding [ui_manual_review_only_65002], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8294B0}" FontSize="9" TextAlignment="Center" Margin="0,5,0,0">
+           <TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding CanQuarantine}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style>
+          </TextBlock>
+         </StackPanel>
+        </Grid>
+       </Border>
+      </DataTemplate>
+     </ItemsControl.ItemTemplate>
+    </ItemsControl>
+    <TextBlock Text="{Binding [ui_quarantine_preserves_the_original_file_outside__4c45d], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.7D91B2}" Margin="0,12,0,0" TextWrapping="Wrap" FontSize="11"/>
+   </StackPanel>
+  </ScrollViewer>
+ </Border>
+</TabItem>
+
+
+
+<TabItem>
+                                <Border Style="{StaticResource Card}">
+                                    <ScrollViewer>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding [ui_settings_c7f73], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="22" FontWeight="SemiBold" Margin="0,0,0,20"/>
+
+                                            <TextBlock Text="{Binding [ui_mods_folder_b6c3a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8AA1C7}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                            <Grid Margin="0,0,0,18">
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <TextBox Text="{Binding ModsFolderPath, Mode=OneWay}" Background="{DynamicResource Theme.Brush.0A1324}" Foreground="{DynamicResource Theme.Brush.D7E6FF}" BorderBrush="{DynamicResource Theme.Brush.1C3152}" BorderThickness="1" Height="40" IsReadOnly="True" VerticalContentAlignment="Center" Padding="12,0"/>
+                                                <Button Grid.Column="1" Style="{StaticResource Secondary}" Command="{Binding SelectModsFolderCommand}" Content="{Binding [ui_select_folder_20fbb], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="148" Height="40" Margin="10,0,0,0"/>
+                                            </Grid>
+
+                                            <TextBlock Text="{Binding [ui_cache_folder_e7fb4], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8AA1C7}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                            <Grid Margin="0,0,0,18">
+                                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                                <TextBox Text="{Binding CacheFolderPath, Mode=OneWay}" Background="{DynamicResource Theme.Brush.0A1324}" Foreground="{DynamicResource Theme.Brush.D7E6FF}" BorderBrush="{DynamicResource Theme.Brush.1C3152}" BorderThickness="1" Height="40" IsReadOnly="True" VerticalContentAlignment="Center" Padding="12,0"/>
+                                                <Button Grid.Column="1" Style="{StaticResource Secondary}" Command="{Binding SelectCacheFolderCommand}" Content="{Binding [ui_select_folder_20fbb], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="148" Height="40" Margin="10,0,0,0"/>
+                                            </Grid>
+
+                                            <TextBlock Text="{Binding [ui_language_89b86], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8AA1C7}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                            <ComboBox FontSize="14" Style="{StaticResource CCSuiteDarkComboBox}" SelectedIndex="{Binding SelectedLanguageIndex}" Width="220" Height="40" HorizontalAlignment="Left" Margin="0,0,0,18" Background="{DynamicResource Theme.Brush.0A1324}" Foreground="{DynamicResource Theme.Brush.D7E6FF}" BorderBrush="{DynamicResource Theme.Brush.1C3152}" BorderThickness="1">
+                                                <ComboBoxItem FontSize="14" Style="{StaticResource CCSuiteDarkComboItem}" Content="English"/>
+                                                <ComboBoxItem FontSize="14" Style="{StaticResource CCSuiteDarkComboItem}" Content="Español"/>
+                                                <ComboBoxItem FontSize="14" Style="{StaticResource CCSuiteDarkComboItem}" Content="한국어"/>
+                                            </ComboBox>
+
+                                            <!-- Visual appearance; changes immediately and saves separately from Mods settings. -->
+                                            <TextBlock Text="{Binding [theme_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8AA1C7}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                            <ComboBox FontSize="14" x:Name="ThemePicker" Style="{StaticResource CCSuiteDarkComboBox}" Width="220" Height="40" HorizontalAlignment="Left" Margin="0,0,0,18" Background="{DynamicResource Theme.Brush.0A1324}" Foreground="{DynamicResource Theme.Brush.D7E6FF}" BorderBrush="{DynamicResource Theme.Brush.1C3152}" BorderThickness="1" SelectionChanged="ThemePicker_SelectionChanged">
+                                                <ComboBoxItem FontSize="14" Style="{StaticResource CCSuiteDarkComboItem}" Content="{Binding [theme_actual], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+                                                <ComboBoxItem FontSize="14" Style="{StaticResource CCSuiteDarkComboItem}" Content="{Binding [theme_premium], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+                                                <ComboBoxItem FontSize="14" Style="{StaticResource CCSuiteDarkComboItem}" Content="Winter Edition ❄"/>
+                                            </ComboBox>
+
+                                            <!-- Optional visual effect; never accesses Mods. -->
+                                            <CheckBox x:Name="WinterSnowToggle" IsChecked="True"
+                                                      Checked="WinterSnowToggle_Changed" Unchecked="WinterSnowToggle_Changed"
+                                                      Foreground="{DynamicResource Theme.Brush.D7E6FF}" FontSize="13"
+                                                      Margin="2,0,0,18" VerticalAlignment="Center"
+                                                      Content="Animated snowfall ❄"/>
+                                            <!-- Winter 22: three visual modes; no Mods operations. -->
+                                            <StackPanel x:Name="WinterLightsModePanel" Visibility="Collapsed" Margin="2,0,0,18">
+                                                <TextBlock x:Name="WinterLightsModeLabel" Text="Christmas lights ✦"
+                                                           Foreground="{DynamicResource Theme.Brush.D7E6FF}" FontSize="13" Margin="0,0,0,8"/>
+                                                <ComboBox x:Name="WinterLightsModePicker" FontSize="13" Height="36" Width="220"
+                                                          HorizontalAlignment="Left"
+                                                          Style="{StaticResource CCSuiteDarkComboBox}"
+                                                          Background="{DynamicResource Theme.Brush.0A1324}"
+                                                          Foreground="{DynamicResource Theme.Brush.D7E6FF}"
+                                                          BorderBrush="{DynamicResource Theme.Brush.1C3152}"
+                                                          SelectionChanged="WinterLightsModePicker_SelectionChanged">
+                                                    <ComboBoxItem x:Name="WinterLightsOff" Style="{StaticResource CCSuiteDarkComboItem}" Content="Off"/>
+                                                    <ComboBoxItem x:Name="WinterLightsSoft" Style="{StaticResource CCSuiteDarkComboItem}" Content="Soft"/>
+                                                    <ComboBoxItem x:Name="WinterLightsDynamic" Style="{StaticResource CCSuiteDarkComboItem}" Content="Dynamic"/>
+                                                </ComboBox>
+                                            </StackPanel>
+                                            <!-- Startup greeting is cosmetic and takes effect on the next launch. -->
+                                            <CheckBox x:Name="WinterWelcomeToggle" IsChecked="True" Visibility="Collapsed"
+                                                      Checked="WinterWelcomeToggle_Changed" Unchecked="WinterWelcomeToggle_Changed"
+                                                      Foreground="{DynamicResource Theme.Brush.D7E6FF}" FontSize="13"
+                                                      Margin="2,0,0,18" VerticalAlignment="Center"
+                                                      Content="Winter welcome on startup ❄"/>
+
+                                            <Button Style="{StaticResource Primary}" Command="{Binding SaveSettingsCommand}" Content="{Binding [ui_save_settings_0022a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="148" Height="40"/>
+                                            <!-- Winter41CreatorCredit: static credit only. No scanners, settings or Mods writes. -->
+                                            <Border x:Name="Winter41CreatorCredit" Background="{DynamicResource Theme.Brush.0C162A}"
+                                                    BorderBrush="{DynamicResource Theme.Brush.49394B}" BorderThickness="1"
+                                                    CornerRadius="12" Padding="16" Margin="0,24,0,2">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding [winter41_about_title], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                                                               Foreground="White" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,12"/>
+                                                    <DockPanel LastChildFill="True">
+                                                        <Image DockPanel.Dock="Left" Source="pack://application:,,,/Resources/WinterSplashLogo.png"
+                                                               Width="52" Height="52" Stretch="Uniform" SnapsToDevicePixels="True"
+                                                               RenderOptions.BitmapScalingMode="HighQuality" Margin="0,0,13,0"/>
+                                                        <StackPanel VerticalAlignment="Center">
+                                                            <TextBlock Text="CC Suite Pro" Foreground="White" FontWeight="Bold" FontSize="14"/>
+                                                            <TextBlock Foreground="{DynamicResource Theme.Brush.D7E6FF}"
+                                                                       FontSize="13" TextWrapping="Wrap" Margin="0,4,0,0">
+                                                                <Run Text="{Binding [winter41_created_by], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+                                                                <Run Text=" megaronun" FontWeight="Bold" Foreground="{DynamicResource Theme.Brush.70AFFF}"/>
+                                                            </TextBlock>
+                                                            <TextBlock Text="v2.0 Stable · Winter Edition 2026" FontSize="11"
+                                                                       Foreground="{DynamicResource Theme.Brush.8AA1C7}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                                        </StackPanel>
+                                                    </DockPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Border>
+                            </TabItem>
+
+
+        <TabItem>
+ <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+  <Grid Margin="3,0,3,12">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="1.5*"/><ColumnDefinition Width="0.92*"/></Grid.ColumnDefinitions>
+   <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
+    <StackPanel>
+     <TextBlock Text="{Binding [ui_plan_organization_a585b], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+     <TextBlock Text="{Binding [ui_choose_options_preview_every_move_then_organize_636d7], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" TextWrapping="Wrap" Foreground="{DynamicResource Theme.Brush.9EB4D5}" Margin="0,8,0,20"/>
+     <Border Background="{DynamicResource Theme.Brush.0C162A}" CornerRadius="12" BorderBrush="{DynamicResource Theme.Brush.253A59}" BorderThickness="1" Padding="15" Margin="0,0,0,16">
+      <StackPanel>
+       <TextBlock Text="{Binding [ui_grouping_d12ef], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.80A9ED}" FontWeight="SemiBold" FontSize="11" Margin="0,0,0,10"/>
+       <CheckBox Content="{Binding [ui_group_recognized_cas_build_buy_cc_by_creator_aee2e], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" IsChecked="{Binding OrganizeByCreator, Mode=TwoWay}" Foreground="{DynamicResource Theme.Brush.D7E6FF}" ToolTip="{Binding [ui_optional_complex_folders_and_script_mods_remain_dc1fa], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/>
+       <TextBlock Text="{Binding [ui_optional_script_mods_and_complex_installations__b06d1], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.7F96B8}" FontSize="11" Margin="20,7,0,0" TextWrapping="Wrap"/>
+      </StackPanel>
+     </Border>
+     <WrapPanel Margin="0,0,0,14">
+      <Button Content="{Binding [ui_1_preview_changes_4e1eb], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Command="{Binding PreviewOrganizeCommand}" Width="170" Margin="0,0,10,10"/>
+      <Button Content="{Binding [ui_2_back_up_organize_a5604], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Primary}" Command="{Binding ExecuteOrganizeCommand}" Width="205" ToolTip="{Binding [ui_review_the_proposed_file_movements_first_c60b5], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Margin="0,0,10,10"/>
+     </WrapPanel>
+     <TextBlock Text="{Binding [ui_proposed_moves_385d9], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.DBE9FF}" FontWeight="SemiBold" Margin="0,0,0,8"/>
+     <Grid Height="310">
+      <Border Background="{DynamicResource Theme.Brush.091325}" BorderBrush="{DynamicResource Theme.Brush.253A59}" BorderThickness="1" CornerRadius="12"/>
+      <TextBox Text="{Binding OrganizePreview, Mode=OneWay}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" Background="Transparent" Foreground="{DynamicResource Theme.Brush.D7E6FF}" BorderThickness="0" Padding="14" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"/>
+      <StackPanel IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15,0">
+       <StackPanel.Style>
+        <Style TargetType="StackPanel">
+         <Setter Property="Visibility" Value="Collapsed"/>
+         <Style.Triggers>
+          <DataTrigger Binding="{Binding OrganizePreview}" Value=""><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+          <DataTrigger Binding="{Binding OrganizePreview}" Value="{x:Null}"><Setter Property="Visibility" Value="Visible"/></DataTrigger>
+         </Style.Triggers>
+        </Style>
+       </StackPanel.Style>
+       <materialDesign:PackIcon Kind="FileDocumentOutline" Width="30" Height="30" Foreground="{DynamicResource Theme.Brush.718AAD}" HorizontalAlignment="Center"/>
+       <TextBlock Text="{Binding [ui_no_preview_yet_b1826], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.DBE9FF}" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,12,0,0"/>
+       <TextBlock Text="{Binding [ui_choose_preview_changes_to_see_the_proposed_move_c2170], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.8EA4C7}" Margin="0,5,0,0" TextWrapping="Wrap" TextAlignment="Center"/>
+      </StackPanel>
+     </Grid>
+    </StackPanel>
+   </Border>
+   <StackPanel Grid.Column="1">
+    <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+     <StackPanel>
+      <TextBlock Text="{Binding [ui_safety_checklist_b3612], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontWeight="SemiBold" FontSize="18"/>
+      <TextBlock Text="{Binding [ui_1_run_a_fresh_scan_f5279], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BFD0EA}" Margin="0,14,0,0"/>
+      <TextBlock Text="{Binding [ui_2_review_duplicates_and_conflicts_f349a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BFD0EA}" Margin="0,10,0,0"/>
+      <TextBlock Text="{Binding [ui_3_generate_an_organization_preview_356b2], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BFD0EA}" Margin="0,10,0,0"/>
+      <TextBlock Text="{Binding [ui_4_confirm_all_proposed_moves_9f89b], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BFD0EA}" Margin="0,10,0,0"/>
+      <Button Content="{Binding [ui_create_a_separate_backup_16aef], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Command="{Binding BackupCommand}" Margin="0,18,0,0"/>
+     </StackPanel>
+    </Border>
+    <Border Style="{StaticResource Card}">
+     <StackPanel>
+      <TextBlock Text="{Binding [ui_ai_advisory_e1741], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontWeight="SemiBold" FontSize="18"/>
+      <TextBlock Text="{Binding AIStatus, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.9EB4D5}" Margin="0,10,0,0" TextWrapping="Wrap"/>
+      <TextBlock Text="{Binding [ui_files_needing_manual_review_are_not_safe_to_org_09b4a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.718AAD}" Margin="0,10,0,0" FontSize="11" TextWrapping="Wrap"/>
+      <Button Content="{Binding [ui_check_ai_center_25f74], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Click="SwitchTab" Tag="7" Margin="0,16,0,0"/>
+     </StackPanel>
+    </Border>
+   </StackPanel>
+  </Grid>
+ </ScrollViewer>
+</TabItem><TabItem>
+ <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+  <StackPanel Margin="3,0,3,12">
+   <Grid Margin="0,0,0,14">
+    <Grid.ColumnDefinitions><ColumnDefinition Width="1.2*"/><ColumnDefinition Width="0.8*"/></Grid.ColumnDefinitions>
+    <Border Grid.Column="0" Style="{StaticResource Card}" Margin="0,0,12,0">
+     <StackPanel>
+      <TextBlock Text="{Binding [ui_ai_analysis_review_46b67], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+      <TextBlock Text="{Binding AIStatus, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BFD2F0}" TextWrapping="Wrap" Margin="0,14,0,0"/>
+      <TextBlock Text="{Binding [ui_the_native_classifier_uses_filename_folder_and__43a7a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A4BADA}" FontSize="12" TextWrapping="Wrap" Margin="0,14,0,0"/>
+     </StackPanel>
+    </Border>
+    <Border Grid.Column="1" Style="{StaticResource Card}">
+     <StackPanel>
+      <TextBlock Text="{Binding [ui_files_to_review_bdd41], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A7BDDA}" FontWeight="SemiBold" FontSize="11"/>
+      <TextBlock Text="{Binding AIReviewCount, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.6FB2FF}" FontSize="42" FontWeight="Bold" Margin="0,12,0,0"/>
+      <Button Content="{Binding [ui_review_in_all_files_d3af1], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Tag="1" Click="SwitchTab" Style="{StaticResource Secondary}" Margin="0,14,0,0"/>
+     </StackPanel>
+    </Border>
+   </Grid>
+   <Border Style="{StaticResource Card}">
+    <StackPanel>
+     <TextBlock Text="{Binding [ui_improve_recommendations_f4e4d], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="White" FontSize="19" FontWeight="SemiBold"/>
+     <TextBlock Text="{Binding [ui_train_the_optional_local_model_with_categories__a3f40], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.9AB1D1}" Margin="0,7,0,16" TextWrapping="Wrap"/>
+     <Grid Margin="0,0,0,15">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <Border Grid.Column="0" Background="{DynamicResource Theme.Brush.0A1426}" CornerRadius="12" BorderBrush="{DynamicResource Theme.Brush.253A59}" BorderThickness="1" Padding="14" Margin="0,0,10,0">
+       <StackPanel><TextBlock Text="{Binding [ui_01_export_a7f05], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.70B5FF}" FontWeight="SemiBold"/><TextBlock Text="{Binding [ui_export_filenames_current_categories_confidence__dcbc9], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BDCCE3}" TextWrapping="Wrap" Margin="0,8,0,0"/></StackPanel>
+      </Border>
+      <Border Grid.Column="1" Background="{DynamicResource Theme.Brush.0A1426}" CornerRadius="12" BorderBrush="{DynamicResource Theme.Brush.253A59}" BorderThickness="1" Padding="14" Margin="0,0,10,0">
+       <StackPanel><TextBlock Text="{Binding [ui_02_verify_04f74], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.70B5FF}" FontWeight="SemiBold"/><TextBlock Text="{Binding [ui_check_the_proposed_category_fill_confirmedcateg_0216a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BDCCE3}" TextWrapping="Wrap" Margin="0,8,0,0"/></StackPanel>
+      </Border>
+      <Border Grid.Column="2" Background="{DynamicResource Theme.Brush.0A1426}" CornerRadius="12" BorderBrush="{DynamicResource Theme.Brush.253A59}" BorderThickness="1" Padding="14">
+       <StackPanel><TextBlock Text="{Binding [ui_03_re_scan_4b26a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.70B5FF}" FontWeight="SemiBold"/><TextBlock Text="{Binding [ui_refresh_the_scan_only_your_confirmed_labels_tra_e6182], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.BDCCE3}" TextWrapping="Wrap" Margin="0,8,0,0"/></StackPanel>
+      </Border>
+     </Grid>
+     <WrapPanel>
+      <Button Content="{Binding [ui_export_review_training_csv_160d1], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Primary}" Command="{Binding ExportAIReviewCommand}" Width="245" Margin="0,0,10,10"/>
+      <Button Content="{Binding [ui_refresh_scan_736b0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Style="{StaticResource Secondary}" Command="{Binding ScanCommand}" Width="145" Margin="0,0,10,10"/>
+     </WrapPanel>
+     <TextBlock Text="{Binding [ui_the_ai_only_advises_you_remain_in_control_of_ca_dff46], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.7891B7}" FontSize="11" TextWrapping="Wrap" Margin="0,11,0,0"/>
+    </StackPanel>
+   </Border>
+  </StackPanel>
+ </ScrollViewer>
+</TabItem>
+<!-- Winter 32: real in-app pages, accessible from sidebar and Dashboard quick actions. -->
+<TabItem>
+ <ContentControl x:Name="WinterCapsuleHost" HorizontalContentAlignment="Stretch"
+                 VerticalContentAlignment="Stretch"/>
+</TabItem>
+<TabItem>
+ <ContentControl x:Name="WinterGuardianHost" HorizontalContentAlignment="Stretch"
+                 VerticalContentAlignment="Stretch"/>
+</TabItem>
+</TabControl>
+</Grid></Grid>
+   </Grid>
+  </Border>
+  <primitives:Thumb Width="7" HorizontalAlignment="Right" Background="Transparent" Cursor="SizeWE" DragDelta="UX24_ResizeRight"/>
+  <primitives:Thumb Height="7" VerticalAlignment="Bottom" Background="Transparent" Cursor="SizeNS" DragDelta="UX24_ResizeBottom"/>
+  <primitives:Thumb Width="16" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom" Background="Transparent" Cursor="SizeNWSE" DragDelta="UX24_ResizeCorner"/>
+
+  <!-- Optional festive lights and sparkles; lower than snowfall, never handles input. -->
+  <Canvas x:Name="WinterAmbientOverlay" Visibility="Collapsed" Opacity="1"
+          IsHitTestVisible="False" Grid.ZIndex="105" ClipToBounds="True"/>
+
+  <!-- Render-only animated snowfall for Winter Edition; never intercepts input. -->
+  <Canvas x:Name="WinterSnowOverlay" Opacity="0" Visibility="Collapsed"
+          IsHitTestVisible="False" Grid.ZIndex="110" ClipToBounds="True"/>
+
+  <!-- In-app guided tour: purely explanatory; targets are highlighted but cannot be clicked. -->
+  <Canvas x:Name="TourOverlay" Visibility="Collapsed" Background="{DynamicResource Theme.Brush.01000000}" Grid.ZIndex="250" ClipToBounds="True" SizeChanged="TourOverlay_SizeChanged">
+   <Path x:Name="TourShade" Fill="{DynamicResource Theme.Brush.99070F1F}" IsHitTestVisible="False"/>
+   <Border x:Name="TourFocusBorder" Background="Transparent" BorderBrush="{DynamicResource Theme.Brush.79B9FF}" BorderThickness="3" CornerRadius="12" IsHitTestVisible="False">
+    <Border.Effect><DropShadowEffect Color="#438CFF" BlurRadius="14" ShadowDepth="0" Opacity="0.65"/></Border.Effect>
+   </Border>
+   <TextBlock x:Name="TourArrow" Text="➜" Foreground="{DynamicResource Theme.Brush.9DCFFF}" FontSize="42" FontWeight="Bold" IsHitTestVisible="False">
+    <TextBlock.Effect><DropShadowEffect Color="#4394FF" BlurRadius="10" ShadowDepth="0" Opacity="0.7"/></TextBlock.Effect>
+   </TextBlock>
+   <Border x:Name="TourCard" Width="390" Background="{DynamicResource Theme.Brush.14223A}" BorderBrush="{DynamicResource Theme.Brush.4977B5}" BorderThickness="1" CornerRadius="14" Padding="20" SnapsToDevicePixels="True">
+    <StackPanel>
+     <Grid Margin="0,0,0,11">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBlock x:Name="TourCounter" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource Theme.Brush.8AC5FF}" VerticalAlignment="Center"/>
+      <ComboBox Style="{StaticResource CCSuiteDarkComboBox}" x:Name="TourLanguagePicker" Grid.Column="1" MinWidth="112" Height="30" SelectionChanged="TourLanguagePicker_SelectionChanged" Foreground="White" Background="{DynamicResource Theme.Brush.203755}">
+       <ComboBoxItem Style="{StaticResource CCSuiteDarkComboItem}" Content="English"/><ComboBoxItem Style="{StaticResource CCSuiteDarkComboItem}" Content="Español"/><ComboBoxItem Style="{StaticResource CCSuiteDarkComboItem}" Content="한국어"/>
+      </ComboBox>
+     </Grid>
+     <TextBlock x:Name="TourStepTitle" Foreground="White" FontSize="20" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,0,0,10"/>
+     <TextBlock x:Name="TourStepBody" Foreground="{DynamicResource Theme.Brush.D4E1F5}" FontSize="13" LineHeight="21" TextWrapping="Wrap" Margin="0,0,0,20"/>
+     <Grid>
+      <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <Button x:Name="TourSkip" Grid.Column="0" Style="{StaticResource Secondary}" Padding="12,0" Height="36" Click="TourSkip_Click"/>
+      <Button x:Name="TourBack" Grid.Column="2" Style="{StaticResource Secondary}" Padding="12,0" Height="36" Margin="6,0,8,0" Click="TourBack_Click"/>
+      <Button x:Name="TourNext" Grid.Column="3" Style="{StaticResource Primary}" Padding="14,0" MinWidth="95" Height="36" Click="TourNext_Click"/>
+     </Grid>
+    </StackPanel>
+   </Border>
+  </Canvas>
+ </Grid>
 </Window>

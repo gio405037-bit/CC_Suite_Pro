@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -49,9 +49,17 @@ namespace CCSuitePro.Services
 
         public ResourceProfile Analyze(string filePath)
         {
-            var profile = new ResourceProfile { FileName = Path.GetFileName(filePath), FileSize = new FileInfo(filePath).Length };
+            var profile = new ResourceProfile { FileName = Path.GetFileName(filePath ?? string.Empty) };
+            if (string.IsNullOrWhiteSpace(filePath)) return profile;
+
             try
             {
+                // A file may disappear between scanning and classification. Treat that as
+                // unavailable evidence, not as a fatal classification error.
+                var info = new FileInfo(filePath);
+                if (!info.Exists) return profile;
+                profile.FileSize = info.Length;
+
                 using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 using (var reader = new BinaryReader(fs))
                 {

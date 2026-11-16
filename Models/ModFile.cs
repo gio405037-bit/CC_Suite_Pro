@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using CCSuitePro.Services;
+using Newtonsoft.Json;
 
 namespace CCSuitePro.Models
 {
@@ -14,6 +16,54 @@ namespace CCSuitePro.Models
         public DateTime LastModified { get; set; }
         public string MD5Hash { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
+        public string CreatorName { get; set; } = "Unknown";
+        public string CreatorEvidence { get; set; } = "None";
+        public int ClassificationConfidence { get; set; }
+        public bool NeedsReview { get; set; }
+        // Advice is kept separate from actual organizer/category and Sims file hashes.
+        public string AISuggestedCategory { get; set; } = "";
+        public int AIScore { get; set; }
+        public string AIScoreDisplay => AIScore > 0 ? $"{AIScore} / 100" : "n/a";
+        public string AIExplanation { get; set; } = "AI not trained yet.";
+        public string AIReviewState => NeedsReview ? "Review" : "Ready";
+
+        // Presentation-only labels. These properties are NOT serialized to the last-scan cache.
+        // Never translate Category, AISuggestedCategory, creator IDs or stored AIExplanation.
+        [JsonIgnore] public string CategoryDisplay => LocalizedCategory(Category);
+        [JsonIgnore] public string AISuggestedCategoryDisplay => LocalizedCategory(AISuggestedCategory);
+        [JsonIgnore] public string CreatorDisplay => CreatorName == "Unknown"
+            ? LanguageService.Instance["display_unknown"] : CreatorName;
+        [JsonIgnore] public string AIReviewStateDisplay => LanguageService.Instance[
+            NeedsReview ? "display_review" : "display_ready"];
+        [JsonIgnore] public string AIExplanationDisplay => PythonSuggestionService.LocalizeExplanation(this);
+
+        private static string LocalizedCategory(string category)
+        {
+            if (string.IsNullOrWhiteSpace(category)) return category;
+            string key = category switch
+            {
+                "Hair" => "display_cat_hair",
+                "Tops" => "display_cat_tops",
+                "Bottoms" => "display_cat_bottoms",
+                "Full Body" => "display_cat_fullbody",
+                "Shoes" => "display_cat_shoes",
+                "Accessories" => "display_cat_accessories",
+                "Sliders" => "display_cat_sliders",
+                "Makeup & Skin" => "display_cat_makeup",
+                "Poses & Animations" => "display_cat_poses",
+                "Furniture" => "display_cat_furniture",
+                "Build Mode" => "display_cat_build",
+                "Electronics" => "display_cat_electronics",
+                "Lighting" => "display_cat_lighting",
+                "Deco" => "display_cat_deco",
+                "Scripts & Mods" => "display_cat_scripts",
+                "Other" => "display_cat_other",
+                "Unknown" => "display_unknown",
+                _ => string.Empty
+            };
+            return key.Length == 0 ? category : LanguageService.Instance[key];
+        }
+
         
         public string FileSizeFormatted
         {

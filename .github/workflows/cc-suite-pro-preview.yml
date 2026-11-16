@@ -1,0 +1,113 @@
+name: CC Suite Pro - Build candidate (NO PUBLICAR)
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Etiqueta del candidato (no crea una Release)"
+        required: true
+        default: "2.0.0-w42-preview"
+        type: string
+        
+
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cc-suite-preview-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate-and-package:
+    name: Revisar, probar y empaquetar (sin publicar)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    env:
+      PREVIEW_VERSION: "${{ inputs.version || '2.0.0-w42-preview' }}"
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v4
+      - name: Instalar .NET 8 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Comprobar arbol publico
+        shell: pwsh
+        run: ./scripts/ci/Check-PublicSource.ps1
+      - name: Compilar Release para Windows x64
+        shell: pwsh
+        run: |
+          dotnet restore ./CCSuitePro.csproj -r win-x64
+          if ($LASTEXITCODE -ne 0) { throw 'Restore failed' }
+          dotnet build ./CCSuitePro.csproj -c Release --no-restore --nologo
+          if ($LASTEXITCODE -ne 0) { throw 'Release build failed' }
+      - name: Verificar Release Smoke - 43 pruebas
+        shell: pwsh
+        run: |
+          $out = (& dotnet run --project ./Tests/ReleaseSmoke/ReleaseSmoke.csproj -c Release --no-launch-profile 2>&1 | Out-String)
+          Write-Host $out
+          if ($LASTEXITCODE -ne 0 -or $out -notmatch 'SUCCESS:\s*43\s+checks passed') { throw 'ReleaseSmoke no supero 43 pruebas' }
+      - name: Verificar Winter Smoke - 8 pruebas
+        shell: pwsh
+        run: |
+          $out = (& dotnet run --project ./Tests/WinterSmoke/WinterSmoke.csproj -c Release --no-launch-profile 2>&1 | Out-String)
+          Write-Host $out
+          if ($LASTEXITCODE -ne 0 -or $out -notmatch 'SUCCESS:\s*8\s+Winter Edition checks passed') { throw 'WinterSmoke no supero 8 pruebas' }
+      - name: Verificar funciones - 45 pruebas sinteticas
+        shell: pwsh
+        run: |
+          $sandbox = Join-Path ([IO.Path]::GetTempPath()) ('CCSuitePro_W36_SANDBOX_' + [guid]::NewGuid().ToString('N'))
+          if (Test-Path -LiteralPath $sandbox) { throw 'El sandbox ya existe' }
+          try {
+            $out = (& dotnet run --project ./Tests/Functional/Functional.csproj -c Release --no-launch-profile -- $sandbox 2>&1 | Out-String)
+            Write-Host $out
+            if ($LASTEXITCODE -ne 0 -or $out -notmatch 'SUCCESS:\s*45\s+Winter 36 functional checks passed') { throw 'Funciones no superaron 45 pruebas' }
+          }
+          finally {
+            if ((Test-Path -LiteralPath $sandbox) -and (Split-Path -Leaf $sandbox) -match '^CCSuitePro_W36_SANDBOX_[a-f0-9]{32}$') {
+              Remove-Item -LiteralPath $sandbox -Recurse -Force -ErrorAction SilentlyContinue
+            }
+          }
+      - name: Crear portable candidato y comprobar contenido
+        shell: pwsh
+        run: |
+          if ($env:PREVIEW_VERSION -notmatch '^[0-9][0-9A-Za-z._-]{1,31}$') { throw 'Version invalida' }
+          $out = Join-Path $env:RUNNER_TEMP 'publish_output'
+          dotnet publish ./CCSuitePro.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -o $out
+          if ($LASTEXITCODE -ne 0) { throw 'Publish failed' }
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'CCSuitePro.exe'))) { throw 'Falta ejecutable' }
+          $bad = @(Get-ChildItem -LiteralPath $out -Recurse -File | Where-Object {
+            $rel = $_.FullName.Substring($out.Length).TrimStart([char[]]@('\','/')).Replace('\','/')
+            $rel -match '(?i)(^|/)(AI|Pruebas|Mods|PatchBackups|PatchDiagnostics|TestResults|Tests|QA|Synthetic)(/|$)|(?i)\.(package|ts4script|py|pfx|pem|key|log)$'
+          })
+          if ($bad.Count -gt 0) { throw ('Ficheros no publicables: ' + $bad.Count) }
+          $packageFolder = Join-Path $env:RUNNER_TEMP 'CCSuitePro'
+          New-Item -ItemType Directory -Path $packageFolder -Force | Out-Null
+          Copy-Item -Path (Join-Path $out '*') -Destination $packageFolder -Recurse -Force
+          Get-ChildItem -LiteralPath $packageFolder -Recurse -File -Filter '*.pdb' |
+          Remove-Item -Force -ErrorAction Stop
+          $license = Join-Path $env:GITHUB_WORKSPACE 'LICENSE'
+          if (-not (Test-Path -LiteralPath $license -PathType Leaf)) {
+           throw 'Falta el archivo LICENSE'}
+           Copy-Item -LiteralPath $license -Destination (Join-Path $packageFolder 'LICENSE') -Force
+           if (@(Get-ChildItem -LiteralPath $packageFolder -Recurse -File -Filter '*.pdb').Count -gt 0) {
+          throw 'El portable contiene archivos PDB' }
+          $artefacts = Join-Path $env:RUNNER_TEMP 'preview_artifacts'
+          New-Item -ItemType Directory -Path $artefacts -Force | Out-Null
+          $zip = Join-Path $artefacts ('CCSuitePro_' + $env:PREVIEW_VERSION + '_win-x64_PREVIEW.zip')
+          Compress-Archive -LiteralPath $packageFolder -DestinationPath $zip -CompressionLevel Optimal
+          $sha = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+          Set-Content -LiteralPath ($zip + '.sha256') -Value ($sha + '  ' + (Split-Path -Leaf $zip)) -Encoding ascii
+          Write-Host ('Candidate SHA-256: ' + $sha)
+          Write-Host 'Candidato generado. NO SE PUBLICO RELEASE.'
+      - name: Guardar candidato para revision manual (NO Release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CC-Suite-Pro-PREVIEW
+          path: ${{ runner.temp }}/preview_artifacts/*
+          if-no-files-found: error
+          retention-days: 7
