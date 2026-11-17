@@ -337,5 +337,18 @@
   "theme_premium": "프리미엄 블랙",
   "theme_error": "테마를 변경할 수 없습니다. 이전 테마가 유지됩니다.",
   "winter41_about_title": "CC Suite Pro 정보",
-  "winter41_created_by": "제작자:"
+  "winter41_created_by": "제작자:",
+  "winter43_updates_title": "GitHub 업데이트",
+  "winter43_installed_version": "설치된 버전",
+  "winter43_updates_privacy": "버튼을 누를 때만 GitHub의 안정 릴리스를 확인합니다. 다운로드, 설치 또는 Mods 변경은 하지 않습니다.",
+  "winter43_check_button": "업데이트 확인",
+  "winter43_open_releases": "GitHub에서 보기",
+  "winter43_status_idle": "새 안정 버전을 확인하려면 버튼을 누르세요.",
+  "winter43_status_checking": "GitHub Releases 확인 중…",
+  "winter43_status_none": "아직 GitHub에 안정 버전이 게시되지 않았습니다.",
+  "winter43_status_current": "이미 최신 안정 버전입니다 ({version}).",
+  "winter43_status_available": "새 안정 버전이 있습니다: {version}. GitHub에서 자세히 확인하세요.",
+  "winter43_status_unsupported": "표준 버전 태그가 없는 이전 릴리스만 찾았습니다. 새 릴리스에는 v2.0.0 또는 v2.1.0을 사용하세요.",
+  "winter43_status_error": "GitHub를 확인할 수 없습니다. 연결 상태를 확인한 후 다시 시도하세요.",
+  "winter43_status_open_failed": "브라우저에서 GitHub를 열 수 없습니다."
 }

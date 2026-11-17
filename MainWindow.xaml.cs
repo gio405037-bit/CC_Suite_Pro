@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,6 +20,9 @@ namespace CCSuitePro
         private bool _winterWelcomeReady;
         private bool _winterLightsReady;
         private WinterAmbientEffect? _winterAmbient;
+        private bool _winter43Checking;
+        private string _winter43StatusKey = "winter43_status_idle";
+        private string _winter43LatestTag = "";
         
         public MainWindow()
         {
@@ -59,6 +64,7 @@ namespace CCSuitePro
                 _winterAmbient?.Dispose();
             };
             UpdateWinterThemeDecoration();
+            Winter43RefreshLabels();
             
         }
 
@@ -175,6 +181,7 @@ namespace CCSuitePro
                 UpdateSnowToggleText();
                 UpdateLightsModeText();
                 UpdateWinterWelcomeToggleText();
+                Winter43RefreshLabels();
             }
         }
 
@@ -221,6 +228,79 @@ namespace CCSuitePro
             if (page < 0) return;
             MainTabs.SelectedIndex = page;
             e.Handled = true;
+        }
+
+        // Winter 43: solo consulta las publicaciones estables de nuestro repositorio.
+        // No descarga ejecutables, no inicia procesos de actualizacion ni modifica Mods.
+        private void Winter43RefreshLabels()
+        {
+            var language = CCSuitePro.Services.LanguageService.Instance;
+            Winter43InstalledVersion.Text = language["winter43_installed_version"]
+                + ": v" + GitHubReleaseChecker.InstalledVersion;
+            var message = language[_winter43StatusKey];
+            Winter43StatusText.Text = message.Replace("{version}", _winter43LatestTag);
+        }
+
+        private void Winter43SetStatus(string key, string latestTag = "")
+        {
+            _winter43StatusKey = key;
+            _winter43LatestTag = latestTag;
+            Winter43RefreshLabels();
+        }
+
+        private async void Winter43CheckUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            if (_winter43Checking) return;
+            _winter43Checking = true;
+            Winter43CheckButton.IsEnabled = false;
+            Winter43ReleasesButton.Visibility = Visibility.Collapsed;
+            Winter43SetStatus("winter43_status_checking");
+            try
+            {
+                var result = await GitHubReleaseChecker.CheckLatestStableAsync();
+                if (!IsLoaded) return;
+                switch (result.State)
+                {
+                    case Winter43ReleaseState.UpdateAvailable:
+                        Winter43ReleasesButton.Visibility = Visibility.Visible;
+                        Winter43SetStatus("winter43_status_available", result.Tag);
+                        break;
+                    case Winter43ReleaseState.UpToDate:
+                        Winter43SetStatus("winter43_status_current", result.Tag);
+                        break;
+                    case Winter43ReleaseState.NoPublishedRelease:
+                        Winter43SetStatus("winter43_status_none");
+                        break;
+                    default:
+                        Winter43SetStatus("winter43_status_unsupported");
+                        break;
+                }
+            }
+            catch (System.Exception)
+            {
+                if (IsLoaded) Winter43SetStatus("winter43_status_error");
+            }
+            finally
+            {
+                _winter43Checking = false;
+                if (IsLoaded) Winter43CheckButton.IsEnabled = true;
+            }
+        }
+
+        private void Winter43OpenReleases_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // URL fija y confiable: nunca ejecutar un enlace recibido desde JSON remoto.
+                Process.Start(new ProcessStartInfo(GitHubReleaseChecker.ReleasesPage)
+                {
+                    UseShellExecute = true
+                });
+            }
+            catch (System.Exception)
+            {
+                Winter43SetStatus("winter43_status_open_failed");
+            }
         }
 
         private void OpenTutorial_Click(object sender, RoutedEventArgs e) => FirstRunTutorial.Show(this);
