@@ -580,6 +580,32 @@
                                                       Content="Winter welcome on startup ❄"/>
 
                                             <Button Style="{StaticResource Primary}" Command="{Binding SaveSettingsCommand}" Content="{Binding [ui_save_settings_0022a], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Width="148" Height="40"/>
+                                            <!-- Winter43UpdateCheck: read-only GitHub Releases lookup; no download or installation. -->
+                                            <Border x:Name="Winter43UpdatePanel" Background="{DynamicResource Theme.Brush.0C162A}"
+                                                    BorderBrush="{DynamicResource Theme.Brush.49394B}" BorderThickness="1"
+                                                    CornerRadius="12" Padding="16" Margin="0,22,0,0">
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding [winter43_updates_title], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                                                               Foreground="White" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,8"/>
+                                                    <TextBlock x:Name="Winter43InstalledVersion" Foreground="{DynamicResource Theme.Brush.D7E6FF}"
+                                                               FontSize="12" Margin="0,0,0,7"/>
+                                                    <TextBlock Text="{Binding [winter43_updates_privacy], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                                                               Foreground="{DynamicResource Theme.Brush.8AA1C7}" FontSize="12"
+                                                               TextWrapping="Wrap" Margin="0,0,0,12"/>
+                                                    <WrapPanel>
+                                                        <Button x:Name="Winter43CheckButton" Style="{StaticResource Primary}"
+                                                                Content="{Binding [winter43_check_button], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                                                                Click="Winter43CheckUpdates_Click" Height="40" MinWidth="176"
+                                                                Margin="0,0,10,8"/>
+                                                        <Button x:Name="Winter43ReleasesButton" Style="{StaticResource Secondary}"
+                                                                Content="{Binding [winter43_open_releases], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                                                                Click="Winter43OpenReleases_Click" Visibility="Collapsed"
+                                                                Height="40" MinWidth="148" Margin="0,0,0,8"/>
+                                                    </WrapPanel>
+                                                    <TextBlock x:Name="Winter43StatusText" Foreground="{DynamicResource Theme.Brush.A9BEDB}"
+                                                               FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                                                </StackPanel>
+                                            </Border>
                                             <!-- Winter41CreatorCredit: static credit only. No scanners, settings or Mods writes. -->
                                             <Border x:Name="Winter41CreatorCredit" Background="{DynamicResource Theme.Brush.0C162A}"
                                                     BorderBrush="{DynamicResource Theme.Brush.49394B}" BorderThickness="1"

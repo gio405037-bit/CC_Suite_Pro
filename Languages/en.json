@@ -337,5 +337,18 @@
   "theme_premium": "Premium Black",
   "theme_error": "The appearance could not be changed. The previous theme was kept.",
   "winter41_about_title": "About CC Suite Pro",
-  "winter41_created_by": "Created by"
+  "winter41_created_by": "Created by",
+  "winter43_updates_title": "Updates from GitHub",
+  "winter43_installed_version": "Installed version",
+  "winter43_updates_privacy": "Checks only stable GitHub Releases when you click. No downloads, installs, or Mods changes.",
+  "winter43_check_button": "Check for updates",
+  "winter43_open_releases": "View on GitHub",
+  "winter43_status_idle": "Click to check for a new stable release.",
+  "winter43_status_checking": "Checking GitHub Releases…",
+  "winter43_status_none": "No stable release has been published on GitHub yet.",
+  "winter43_status_current": "You have the latest stable release ({version}).",
+  "winter43_status_available": "A new stable release is available: {version}. Review it on GitHub.",
+  "winter43_status_unsupported": "Only older releases with nonstandard version tags were found. New releases should use v2.0.0 or v2.1.0.",
+  "winter43_status_error": "Could not check GitHub. Check your connection and try again.",
+  "winter43_status_open_failed": "Could not open GitHub in your browser."
 }
