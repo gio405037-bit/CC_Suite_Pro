@@ -1,0 +1,128 @@
+name: CC Suite Pro - Publish signed stable release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Version stable vMAJOR.MINOR.PATCH; update CCSuitePro.csproj first"
+        required: true
+        type: string
+      confirm:
+        description: "Type PUBLICAR to explicitly authorize public release"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cc-suite-pro-publish-stable
+  cancel-in-progress: false
+
+jobs:
+  sign-and-publish:
+    if: github.ref == 'refs/heads/main' && inputs.confirm == 'PUBLICAR'
+    runs-on: windows-latest
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_TAG: ${{ inputs.tag }}
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+    steps:
+      - name: Checkout protected main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Validate tag and signing configuration
+        env:
+          CCSUITE_SIGN_PASSPHRASE: ${{ secrets.CCSUITE_SIGN_PASSPHRASE }}
+          SIGNING_PRIVATE_B64: ${{ secrets.CCSUITE_SIGN_PRIVATE_PEM_B64 }}
+        shell: pwsh
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^v(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)$') { throw 'Bad tag' }
+          [xml]$project = Get-Content ./CCSuitePro.csproj
+          $ver = [string]$project.Project.PropertyGroup.Version
+          if ($env:RELEASE_TAG -ne ('v' + $ver)) { throw 'Release tag and assembly version differ' }
+          if ([string]::IsNullOrWhiteSpace($env:SIGNING_PRIVATE_B64) -or [string]::IsNullOrWhiteSpace($env:CCSUITE_SIGN_PASSPHRASE)) {
+            throw 'Signing credentials not configured in repository secrets'
+          }
+          gh release view $env:RELEASE_TAG -R gio405037-bit/CC_Suite_Pro *> $null
+          if ($LASTEXITCODE -eq 0) { throw 'Release tag already published; refusing overwrite' }
+      - name: Public source checks
+        shell: pwsh
+        run: ./scripts/ci/Check-PublicSource.ps1
+      - name: Build application and 96 synthetic checks
+        shell: pwsh
+        run: |
+          dotnet restore ./CCSuitePro.csproj -r win-x64
+          if ($LASTEXITCODE -ne 0) { throw 'restore failed' }
+          dotnet build ./CCSuitePro.csproj -c Release --no-restore --nologo
+          if ($LASTEXITCODE -ne 0) { throw 'release build failed' }
+          $a = (& dotnet run --project ./Tests/ReleaseSmoke/ReleaseSmoke.csproj -c Release --no-launch-profile 2>&1 | Out-String)
+          Write-Host $a
+          if ($LASTEXITCODE -ne 0 -or $a -notmatch 'SUCCESS:\s*43\s+checks passed') { throw '43 smoke checks failed' }
+          $b = (& dotnet run --project ./Tests/WinterSmoke/WinterSmoke.csproj -c Release --no-launch-profile 2>&1 | Out-String)
+          Write-Host $b
+          if ($LASTEXITCODE -ne 0 -or $b -notmatch 'SUCCESS:\s*8\s+Winter Edition checks passed') { throw '8 winter checks failed' }
+          $sandbox = Join-Path ([IO.Path]::GetTempPath()) ('CCSuitePro_W36_SANDBOX_' + [guid]::NewGuid().ToString('N'))
+          try {
+            $c = (& dotnet run --project ./Tests/Functional/Functional.csproj -c Release --no-launch-profile -- $sandbox 2>&1 | Out-String)
+            Write-Host $c
+            if ($LASTEXITCODE -ne 0 -or $c -notmatch 'SUCCESS:\s*45\s+Winter 36 functional checks passed') { throw '45 functional checks failed' }
+          }
+          finally {
+            if ((Test-Path -LiteralPath $sandbox) -and (Split-Path -Leaf $sandbox) -match '^CCSuitePro_W36_SANDBOX_[a-f0-9]{32}$') {
+              Remove-Item -LiteralPath $sandbox -Recurse -Force -ErrorAction SilentlyContinue
+            }
+          }
+      - name: Publish Windows x64 application and updater
+        shell: pwsh
+        run: |
+          $app = Join-Path $env:RUNNER_TEMP 'publish_app'
+          $updater = Join-Path $env:RUNNER_TEMP 'publish_updater'
+          $folder = Join-Path $env:RUNNER_TEMP 'CCSuitePro'
+          dotnet publish ./CCSuitePro.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=false -p:DebugType=None -o $app
+          if ($LASTEXITCODE -ne 0) { throw 'App publish failed' }
+          dotnet publish ./Updater/CCSuitePro.Updater.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -o $updater
+          if ($LASTEXITCODE -ne 0) { throw 'Updater publish failed' }
+          New-Item -ItemType Directory $folder -Force | Out-Null
+          Copy-Item -Path (Join-Path $app '*') -Destination $folder -Recurse -Force
+          Copy-Item -LiteralPath (Join-Path $updater 'CCSuitePro.Updater.exe') -Destination (Join-Path $folder 'CCSuitePro.Updater.exe') -ErrorAction Stop
+          Copy-Item -LiteralPath ./LICENSE -Destination (Join-Path $folder 'LICENSE') -ErrorAction Stop
+          Get-ChildItem -LiteralPath $folder -Recurse -Filter '*.pdb' -File | Remove-Item -Force
+          $bad = @(Get-ChildItem -LiteralPath $folder -Recurse -File | Where-Object {
+            $relative = $_.FullName.Substring($folder.Length).TrimStart([char[]]@('\','/')).Replace('\','/')
+            $relative -match '(?i)(^|/)(AI|Pruebas|Mods|PatchBackups|PatchDiagnostics|TestResults|Tests|QA|Synthetic)(/|$)|\.(package|ts4script|py|pfx|pem|key|log|pdb)$'
+          })
+          if ($bad.Count -gt 0) { throw 'Forbidden files in public package' }
+          $output = Join-Path $env:RUNNER_TEMP 'signed_release'
+          New-Item -ItemType Directory $output -Force | Out-Null
+          $zip = Join-Path $output ('CCSuitePro_' + $env:RELEASE_TAG + '_win-x64.zip')
+          Compress-Archive -LiteralPath $folder -DestinationPath $zip -CompressionLevel Optimal
+          $sha = (Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash
+          Set-Content -LiteralPath ($zip + '.sha256') -Value ($sha + '  ' + (Split-Path -Leaf $zip)) -Encoding ascii
+          "ZIP_PATH=$zip" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+      - name: Sign immutable release with publisher key
+        env:
+          CCSUITE_SIGN_PASSPHRASE: ${{ secrets.CCSUITE_SIGN_PASSPHRASE }}
+          SIGNING_PRIVATE_B64: ${{ secrets.CCSUITE_SIGN_PRIVATE_PEM_B64 }}
+        shell: pwsh
+        run: |
+          $private = Join-Path $env:RUNNER_TEMP ('private_' + [guid]::NewGuid().ToString('N') + '.pem')
+          try {
+            [IO.File]::WriteAllBytes($private, [Convert]::FromBase64String($env:SIGNING_PRIVATE_B64))
+            dotnet run --project ./Tools/ReleaseSigner/ReleaseSigner.csproj -c Release -- sign $env:ZIP_PATH $env:RELEASE_TAG $private ($env:ZIP_PATH + '.sig')
+            if ($LASTEXITCODE -ne 0) { throw 'Signing failed' }
+            dotnet run --project ./Tools/ReleaseSigner/ReleaseSigner.csproj -c Release -- verify $env:ZIP_PATH $env:RELEASE_TAG ($env:ZIP_PATH + '.sig')
+            if ($LASTEXITCODE -ne 0) { throw 'Signature verification failed' }
+          }
+          finally { if (Test-Path -LiteralPath $private) { Remove-Item -LiteralPath $private -Force } }
+      - name: Publish signed stable GitHub Release (explicit manual authorization)
+        shell: pwsh
+        run: |
+          gh release create $env:RELEASE_TAG $env:ZIP_PATH ($env:ZIP_PATH + '.sig') ($env:ZIP_PATH + '.sha256') --repo gio405037-bit/CC_Suite_Pro --target $env:GITHUB_SHA --title ('CC Suite Pro ' + $env:RELEASE_TAG) --generate-notes --latest
+          if ($LASTEXITCODE -ne 0) { throw 'Release publish failed' }

@@ -355,5 +355,9 @@
     "winter44_confirm":  "¿Descargar la nueva versión a la carpeta de preparación de CC Suite Pro? NO se instalará, extraerá ni ejecutará. Los Mods y la configuración no cambiarán.",
     "winter44_status_downloading":  "Descargando y verificando el ZIP oficial de la versión…",
     "winter44_status_verified":  "ZIP verificado y guardado localmente. La instalación todavía no está disponible.",
-    "winter44_status_error":  "Falló la descarga o la verificación. No se instaló ninguna actualización."
+    "winter44_status_error":  "Falló la descarga o la verificación. No se instaló ninguna actualización.",
+  "winter45_install_button": "Actualizar ahora",
+  "winter45_confirm": "Se descargara una actualizacion oficial firmada, se verificara y se creara un respaldo antes de reemplazar archivos de CC Suite Pro. La aplicacion se cerrara y reiniciara. No se modificaran los Mods ni los escaneos personales. ¿Continuar?",
+  "winter45_status_working": "Verificando la firma del creador y preparando la actualizacion {version}...",
+  "winter45_status_failed": "No se pudo verificar o iniciar la actualizacion. La version instalada sigue intacta."
 }

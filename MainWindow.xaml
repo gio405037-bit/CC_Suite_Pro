@@ -605,6 +605,10 @@
                                                                 Content="{Binding [winter44_stage_button], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
                                                                 Click="Winter44Stage_Click" Visibility="Collapsed"
                                                                 Height="40" MinWidth="196" Margin="0,0,0,8"/>
+                                                        <Button x:Name="Winter45InstallButton" Style="{StaticResource Primary}"
+                                                                Content="{Binding [winter45_install_button], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"
+                                                                Click="Winter45Install_Click" Visibility="Collapsed"
+                                                                Height="40" MinWidth="164" Margin="0,0,0,8"/>
                                                     </WrapPanel>
                                                     <TextBlock x:Name="Winter43StatusText" Foreground="{DynamicResource Theme.Brush.A9BEDB}"
                                                                FontSize="12" TextWrapping="Wrap" Margin="0,6,0,0"/>

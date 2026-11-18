@@ -60,4 +60,8 @@
     <None Remove="Resources\WinterSplashLogo.png" />
     <Resource Include="Resources\WinterSplashLogo.png" />
   </ItemGroup>
+  <!-- Keep auxiliary console projects out of WPF automatic Compile globbing. -->
+  <ItemGroup>
+    <Compile Remove="Updater\**\*.cs;Tools\ReleaseSigner\**\*.cs" />
+  </ItemGroup>
 </Project>

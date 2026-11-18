@@ -88,6 +88,10 @@ jobs:
           $packageFolder = Join-Path $env:RUNNER_TEMP 'CCSuitePro'
           New-Item -ItemType Directory -Path $packageFolder -Force | Out-Null
           Copy-Item -Path (Join-Path $out '*') -Destination $packageFolder -Recurse -Force
+          $helperOut = Join-Path $env:RUNNER_TEMP 'winter45_updater'
+          dotnet publish ./Updater/CCSuitePro.Updater.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:DebugType=None -o $helperOut
+          if ($LASTEXITCODE -ne 0) { throw 'Updater publish failed' }
+          Copy-Item -LiteralPath (Join-Path $helperOut 'CCSuitePro.Updater.exe') -Destination (Join-Path $packageFolder 'CCSuitePro.Updater.exe') -ErrorAction Stop
           Get-ChildItem -LiteralPath $packageFolder -Recurse -File -Filter '*.pdb' |
           Remove-Item -Force -ErrorAction Stop
           $license = Join-Path $env:GITHUB_WORKSPACE 'LICENSE'

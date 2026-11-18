@@ -355,5 +355,9 @@
     "winter44_confirm":  "Download the new release into CC Suite Pro\u0027s update staging folder? It will NOT be installed, extracted or executed. Mods and settings will not change.",
     "winter44_status_downloading":  "Downloading and checking the official release ZIP…",
     "winter44_status_verified":  "ZIP verified and saved in local update staging. Installation is not yet available.",
-    "winter44_status_error":  "The download or verification failed. No update was installed."
+    "winter44_status_error":  "The download or verification failed. No update was installed.",
+  "winter45_install_button": "Update now",
+  "winter45_confirm": "A signed official update will be downloaded and verified, and the app files will be backed up before replacement. CC Suite Pro will close and restart. Mods and personal scans will not be changed. Continue?",
+  "winter45_status_working": "Verifying the publisher signature and preparing update {version}...",
+  "winter45_status_failed": "Could not verify or start the update. Your installed version was not changed."
 }
