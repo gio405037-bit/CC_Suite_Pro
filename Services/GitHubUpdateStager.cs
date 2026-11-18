@@ -195,6 +195,8 @@ namespace CCSuitePro.Services
                     if (expandedBytes > 4L * MaxZipBytes) return false;
                     string[] parts = name.Split('/', StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Any(p => p.Equals("Mods", StringComparison.OrdinalIgnoreCase))) return false;
+                    if (name.EndsWith(".package", StringComparison.OrdinalIgnoreCase) ||
+                    name.EndsWith(".ts4script", StringComparison.OrdinalIgnoreCase)) return false;
                     if (name.EndsWith(".pdb", StringComparison.OrdinalIgnoreCase)) return false;
                     if (name.Equals("CCSuitePro.exe", StringComparison.OrdinalIgnoreCase) ||
                         name.Equals("CCSuitePro/CCSuitePro.exe", StringComparison.OrdinalIgnoreCase))
