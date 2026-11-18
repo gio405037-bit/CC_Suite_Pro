@@ -254,6 +254,7 @@ namespace CCSuitePro
             _winter43Checking = true;
             Winter43CheckButton.IsEnabled = false;
             Winter43ReleasesButton.Visibility = Visibility.Collapsed;
+            Winter44StageButton.Visibility = Visibility.Collapsed;
             Winter43SetStatus("winter43_status_checking");
             try
             {
@@ -263,6 +264,7 @@ namespace CCSuitePro
                 {
                     case Winter43ReleaseState.UpdateAvailable:
                         Winter43ReleasesButton.Visibility = Visibility.Visible;
+                        Winter44StageButton.Visibility = Visibility.Visible;
                         Winter43SetStatus("winter43_status_available", result.Tag);
                         break;
                     case Winter43ReleaseState.UpToDate:
@@ -284,6 +286,40 @@ namespace CCSuitePro
             {
                 _winter43Checking = false;
                 if (IsLoaded) Winter43CheckButton.IsEnabled = true;
+            }
+        }
+
+        // Winter44: una descarga explicitamente consentida, verificada y SIN instalacion.
+        private bool _winter44Downloading;
+        private async void Winter44Stage_Click(object sender, RoutedEventArgs e)
+        {
+            if (_winter44Downloading || string.IsNullOrWhiteSpace(_winter43LatestTag)) return;
+            var language = LanguageService.Instance;
+            if (MessageBox.Show(language["winter44_confirm"], "CC Suite Pro",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                return;
+            string selectedTag = _winter43LatestTag;
+            _winter44Downloading = true;
+            Winter44StageButton.IsEnabled = false;
+            Winter43CheckButton.IsEnabled = false;
+            Winter43SetStatus("winter44_status_downloading", selectedTag);
+            try
+            {
+                await GitHubUpdateStager.DownloadAndVerifyAsync(selectedTag);
+                if (IsLoaded) Winter43SetStatus("winter44_status_verified", selectedTag);
+            }
+            catch (System.Exception)
+            {
+                if (IsLoaded) Winter43SetStatus("winter44_status_error", selectedTag);
+            }
+            finally
+            {
+                _winter44Downloading = false;
+                if (IsLoaded)
+                {
+                    Winter44StageButton.IsEnabled = true;
+                    Winter43CheckButton.IsEnabled = true;
+                }
             }
         }
 
