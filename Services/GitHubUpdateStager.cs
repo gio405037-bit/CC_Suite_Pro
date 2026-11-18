@@ -87,6 +87,7 @@ namespace CCSuitePro.Services
             {
                 string name = asset.GetProperty("name").GetString() ?? "";
                 if (!AssetPattern.IsMatch(name) ||
+                    !string.Equals(name, Winter45UpdateTrust.ExpectedAssetName(tag), StringComparison.Ordinal) ||
                     Regex.IsMatch(name, @"preview|debug|test|rc", RegexOptions.IgnoreCase))
                     continue;
                 matches++;

@@ -355,5 +355,9 @@
     "winter44_confirm":  "새 버전을 CC Suite Pro 업데이트 임시 폴더에 다운로드할까요? 설치, 압축 해제 또는 실행하지 않습니다. Mods와 설정은 변경되지 않습니다.",
     "winter44_status_downloading":  "공식 릴리스 ZIP 다운로드 및 검증 중…",
     "winter44_status_verified":  "ZIP 검증 및 로컬 저장 완료. 설치 기능은 아직 제공되지 않습니다.",
-    "winter44_status_error":  "다운로드 또는 검증에 실패했습니다. 업데이트를 설치하지 않았습니다."
+    "winter44_status_error":  "다운로드 또는 검증에 실패했습니다. 업데이트를 설치하지 않았습니다.",
+  "winter45_install_button": "지금 업데이트",
+  "winter45_confirm": "공식 서명 업데이트를 다운로드하고 검증한 후 기존 앱 파일을 백업합니다. CC Suite Pro가 종료 후 다시 실행됩니다. 개인 Mods와 스캔 기록은 변경하지 않습니다. 계속하시겠습니까?",
+  "winter45_status_working": "게시자 서명을 확인하고 {version} 업데이트를 준비하는 중...",
+  "winter45_status_failed": "업데이트를 확인하거나 시작하지 못했습니다. 현재 설치 버전은 변경되지 않았습니다."
 }

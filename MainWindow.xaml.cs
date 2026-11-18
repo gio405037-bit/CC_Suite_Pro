@@ -255,6 +255,7 @@ namespace CCSuitePro
             Winter43CheckButton.IsEnabled = false;
             Winter43ReleasesButton.Visibility = Visibility.Collapsed;
             Winter44StageButton.Visibility = Visibility.Collapsed;
+                        Winter45InstallButton.Visibility = Visibility.Collapsed;
             Winter43SetStatus("winter43_status_checking");
             try
             {
@@ -265,6 +266,7 @@ namespace CCSuitePro
                     case Winter43ReleaseState.UpdateAvailable:
                         Winter43ReleasesButton.Visibility = Visibility.Visible;
                         Winter44StageButton.Visibility = Visibility.Visible;
+                        Winter45InstallButton.Visibility = Visibility.Visible;
                         Winter43SetStatus("winter43_status_available", result.Tag);
                         break;
                     case Winter43ReleaseState.UpToDate:
@@ -291,6 +293,63 @@ namespace CCSuitePro
 
         // Winter44: una descarga explicitamente consentida, verificada y SIN instalacion.
         private bool _winter44Downloading;
+        // Winter45: opt-in, signed, one-click installation. The app never replaces its own files.
+        private bool _winter45Updating;
+        private async void Winter45Install_Click(object sender, RoutedEventArgs e)
+        {
+            if (_winter45Updating || string.IsNullOrWhiteSpace(_winter43LatestTag)) return;
+            if (MessageBox.Show(LanguageService.Instance["winter45_confirm"], "CC Suite Pro",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+            _winter45Updating = true;
+            Winter45InstallButton.IsEnabled = false;
+            Winter43CheckButton.IsEnabled = false;
+            Winter44StageButton.IsEnabled = false;
+            string tag = _winter43LatestTag;
+            Winter43SetStatus("winter45_status_working", tag);
+            try
+            {
+                string zip = await GitHubUpdateStager.DownloadAndVerifyAsync(tag);
+                await Winter45SignedRelease.FetchAndVerifyAsync(zip, tag);
+                string sourceHelper = System.IO.Path.Combine(System.AppContext.BaseDirectory, "CCSuitePro.Updater.exe");
+                if (!System.IO.File.Exists(sourceHelper))
+                    throw new System.IO.FileNotFoundException("Update helper missing", sourceHelper);
+                string helperFolder = System.IO.Path.Combine(
+                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData),
+                    "CCSuitePro", "Updates", "Helpers", System.Guid.NewGuid().ToString("N"));
+                System.IO.Directory.CreateDirectory(helperFolder);
+                string helper = System.IO.Path.Combine(helperFolder, "CCSuitePro.Updater.exe");
+                System.IO.File.Copy(sourceHelper, helper);
+                var start = new ProcessStartInfo(helper)
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    WorkingDirectory = helperFolder
+                };
+                start.ArgumentList.Add("apply");
+                start.ArgumentList.Add(zip);
+                start.ArgumentList.Add(tag);
+                start.ArgumentList.Add(System.AppContext.BaseDirectory);
+                start.ArgumentList.Add(System.Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                if (Process.Start(start) == null) throw new System.IO.IOException("Could not start the updater");
+                System.Windows.Application.Current.Shutdown();
+            }
+            catch (System.Exception)
+            {
+                if (IsLoaded) Winter43SetStatus("winter45_status_failed", tag);
+            }
+            finally
+            {
+                _winter45Updating = false;
+                if (IsLoaded)
+                {
+                    Winter45InstallButton.IsEnabled = true;
+                    Winter43CheckButton.IsEnabled = true;
+                    Winter44StageButton.IsEnabled = true;
+                }
+            }
+        }
+
+
         private async void Winter44Stage_Click(object sender, RoutedEventArgs e)
         {
             if (_winter44Downloading || string.IsNullOrWhiteSpace(_winter43LatestTag)) return;
