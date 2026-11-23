@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CCSuitePro.Updater</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Services/Winter45UpdateTrust.cs" Link="Winter45UpdateTrust.cs" />
+  </ItemGroup>
+</Project>
