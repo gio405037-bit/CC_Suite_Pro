@@ -7,8 +7,13 @@ on:
         description: "Version stable vMAJOR.MINOR.PATCH; update CCSuitePro.csproj first"
         required: true
         type: string
+      dry_run:
+        description: "True: sign and upload an Actions artifact, do not publish a GitHub Release"
+        required: true
+        type: boolean
+        default: true
       confirm:
-        description: "Type PUBLICAR to explicitly authorize public release"
+        description: "Type ENSAYO for dry run, or PUBLICAR for public release"
         required: true
         type: string
 
@@ -21,12 +26,13 @@ concurrency:
 
 jobs:
   sign-and-publish:
-    if: github.ref == 'refs/heads/main' && inputs.confirm == 'PUBLICAR'
+    if: github.ref == 'refs/heads/main' && ((inputs.dry_run == true && inputs.confirm == 'ENSAYO') || (inputs.dry_run == false && inputs.confirm == 'PUBLICAR'))
     runs-on: windows-latest
     timeout-minutes: 60
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       RELEASE_TAG: ${{ inputs.tag }}
+      DRY_RUN: ${{ inputs.dry_run }}
       DOTNET_CLI_TELEMETRY_OPTOUT: '1'
     steps:
       - name: Checkout protected main
@@ -50,8 +56,10 @@ jobs:
           if ([string]::IsNullOrWhiteSpace($env:SIGNING_PRIVATE_B64) -or [string]::IsNullOrWhiteSpace($env:CCSUITE_SIGN_PASSPHRASE)) {
             throw 'Signing credentials not configured in repository secrets'
           }
-          gh release view $env:RELEASE_TAG -R gio405037-bit/CC_Suite_Pro *> $null
-          if ($LASTEXITCODE -eq 0) { throw 'Release tag already published; refusing overwrite' }
+          if ($env:DRY_RUN -ne 'true') {
+            gh release view $env:RELEASE_TAG -R gio405037-bit/CC_Suite_Pro *> $null
+            if ($LASTEXITCODE -eq 0) { throw 'Release tag already published; refusing overwrite' }
+          }
       - name: Public source checks
         shell: pwsh
         run: ./scripts/ci/Check-PublicSource.ps1
@@ -121,7 +129,19 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw 'Signature verification failed' }
           }
           finally { if (Test-Path -LiteralPath $private) { Remove-Item -LiteralPath $private -Force } }
+      - name: Upload signed archive for inspection (dry run only)
+        if: ${{ inputs.dry_run == true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: CC-Suite-Pro-SIGNED-DRY-RUN
+          path: |
+            ${{ env.ZIP_PATH }}
+            ${{ env.ZIP_PATH }}.sig
+            ${{ env.ZIP_PATH }}.sha256
+          if-no-files-found: error
+          retention-days: 3
       - name: Publish signed stable GitHub Release (explicit manual authorization)
+        if: ${{ inputs.dry_run == false && inputs.confirm == 'PUBLICAR' }}
         shell: pwsh
         run: |
           gh release create $env:RELEASE_TAG $env:ZIP_PATH ($env:ZIP_PATH + '.sig') ($env:ZIP_PATH + '.sha256') --repo gio405037-bit/CC_Suite_Pro --target $env:GITHUB_SHA --title ('CC Suite Pro ' + $env:RELEASE_TAG) --generate-notes --latest
