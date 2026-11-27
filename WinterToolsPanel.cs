@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -36,7 +37,22 @@ namespace CCSuitePro
             "es" => es, "ko" => ko, _ => en
         };
 
-        private Window OwnerWindow => Window.GetWindow(this) ?? Application.Current.MainWindow;
+            // WINTER46-L10N: formato aislado por idioma de la app; no modifica la cultura del sistema.
+    private static CultureInfo UiCulture => LanguageService.Instance.CurrentLanguage switch
+    {
+        "es" => CultureInfo.GetCultureInfo("es-MX"),
+        "ko" => CultureInfo.GetCultureInfo("ko-KR"),
+        _ => CultureInfo.GetCultureInfo("en-US")
+    };
+
+    private static string LocalDate(DateTimeOffset utc, string format = "g") =>
+        utc.ToLocalTime().ToString(format, UiCulture);
+
+    private static string LocalNumber(int value) => value.ToString("N0", UiCulture);
+    private static string LocalAmount(double value) => value.ToString("0.##", UiCulture);
+    private static string LocalSignedNumber(int value) => value.ToString("+#;-#;0", UiCulture);
+    private static string LocalSignedAmount(double value) => value.ToString("+#.##;-#.##;0", UiCulture);
+private Window OwnerWindow => Window.GetWindow(this) ?? Application.Current.MainWindow;
 
         public WinterToolsPanel(MainViewModel vm, int page, Action<int> navigate)
         {
@@ -203,13 +219,13 @@ namespace CCSuitePro
             {
                 var capsules = WinterLibraryService.LoadCapsules();
                 _body.Children.Add(Tiles(3,
-                    Metric(T("CAPSULES", "CÁPSULAS", "캡슐"), capsules.Count.ToString("N0"),
+                    Metric(T("CAPSULES", "CÁPSULAS", "캡슐"), LocalNumber(capsules.Count),
                         T("Saved snapshots", "Registros históricos", "저장된 기록")),
                     Metric(T("LATEST", "ÚLTIMA CAPTURA", "최근 기록"),
-                        capsules.Count == 0 ? "—" : capsules[0].CreatedUtc.ToLocalTime().ToString("d"),
+                        capsules.Count == 0 ? "—" : LocalDate(capsules[0].CreatedUtc, "d"),
                         T("Local date", "Fecha local", "현지 날짜")),
                     Metric(T("RECORDED MODS", "MODS REGISTRADOS", "기록된 모드"),
-                        capsules.Count == 0 ? "—" : capsules[0].Total.ToString("N0"),
+                        capsules.Count == 0 ? "—" : LocalNumber(capsules[0].Total),
                         T("Latest capsule", "Última cápsula", "최신 캡슐"))));
                 if (capsules.Count == 0)
                 {
@@ -228,7 +244,7 @@ namespace CCSuitePro
                     _body.Children.Add(Card(
                         Label(T("SINCE THE PREVIOUS CAPSULE", "DESDE LA CÁPSULA ANTERIOR", "이전 캡슐 이후"),
                             12, _muted, FontWeights.SemiBold),
-                        Label($"{a.Total - b.Total:+#;-#;0} Mods    ·    {(a.Bytes - b.Bytes) / (1024.0 * 1024 * 1024):+#.##;-#.##;0} GB",
+                        Label($"{LocalSignedNumber(a.Total - b.Total)} Mods    ·    {LocalSignedAmount((a.Bytes - b.Bytes) / (1024.0 * 1024 * 1024))} GB",
                             19, _accent, FontWeights.SemiBold)));
                 }
                 _body.Children.Add(Card(
@@ -238,10 +254,10 @@ namespace CCSuitePro
                         "Solo se muestran estadísticas locales, de la más reciente a la anterior.",
                         "로컬 통계만 최신순으로 표시합니다."), 12, _muted, FontWeights.Normal)));
                 var history = capsules.Take(10).Select(capsule => Card(
-                    Label(capsule.CreatedUtc.ToLocalTime().ToString("g"), 14, _foreground, FontWeights.SemiBold),
-                    Label($"{capsule.Total:N0} Mods  ·  {capsule.Bytes / (1024.0 * 1024 * 1024):0.##} GB",
+                    Label(LocalDate(capsule.CreatedUtc, "g"), 14, _foreground, FontWeights.SemiBold),
+                    Label($"{LocalNumber(capsule.Total)} Mods  ·  {LocalAmount(capsule.Bytes / (1024.0 * 1024 * 1024))} GB",
                         13, _accent, FontWeights.SemiBold),
-                    Label($"{capsule.Packages:N0} .package  ·  {capsule.Scripts:N0} .ts4script  ·  {capsule.DuplicateGroups} " +
+                    Label($"{LocalNumber(capsule.Packages)} .package  ·  {LocalNumber(capsule.Scripts)} .ts4script  ·  {LocalNumber(capsule.DuplicateGroups)} " +
                         T("duplicate groups", "grupos duplicados", "중복 그룹"), 12, _muted, FontWeights.Normal)))
                     .ToArray();
                 _body.Children.Add(Tiles(2, history));
@@ -277,12 +293,12 @@ namespace CCSuitePro
             try
             {
                 var labels = new StackPanel { Background = ColorBrush(_winter ? "#2A1B23" : "#101B2B"), Width = 660, Margin = new Thickness(0) };
-                labels.Children.Add(Label("CC SUITE PRO  ·  LIBRARY TIME CAPSULE", 18, _accent, FontWeights.Bold));
-                labels.Children.Add(Label(capsule.CreatedUtc.ToLocalTime().ToString("D"), 24, Brushes.White, FontWeights.Bold));
-                labels.Children.Add(Label($"{capsule.Total:N0} Mods    |    {capsule.Bytes / (1024.0 * 1024 * 1024):0.##} GB", 22, Brushes.White, FontWeights.SemiBold));
-                labels.Children.Add(Label($"{capsule.Packages:N0} .package    ·    {capsule.Scripts:N0} .ts4script", 14, _muted, FontWeights.Normal));
-                labels.Children.Add(Label($"{capsule.DuplicateGroups} " + T("duplicate groups", "grupos duplicados", "중복 그룹") +
-                    $"    ·    {capsule.PotentialConflicts} " + T("potential conflicts", "posibles conflictos", "잠재 충돌"),
+                labels.Children.Add(Label("CC SUITE PRO  ·  " + T("LIBRARY TIME CAPSULE", "CÁPSULA DEL TIEMPO", "라이브러리 타임 캡슐"), 18, _accent, FontWeights.Bold));
+                labels.Children.Add(Label(LocalDate(capsule.CreatedUtc, "D"), 24, Brushes.White, FontWeights.Bold));
+                labels.Children.Add(Label($"{LocalNumber(capsule.Total)} Mods    |    {LocalAmount(capsule.Bytes / (1024.0 * 1024 * 1024))} GB", 22, Brushes.White, FontWeights.SemiBold));
+                labels.Children.Add(Label($"{LocalNumber(capsule.Packages)} .package    ·    {LocalNumber(capsule.Scripts)} .ts4script", 14, _muted, FontWeights.Normal));
+                labels.Children.Add(Label($"{LocalNumber(capsule.DuplicateGroups)} " + T("duplicate groups", "grupos duplicados", "중복 그룹") +
+                    $"    ·    {LocalNumber(capsule.PotentialConflicts)} " + T("potential conflicts", "posibles conflictos", "잠재 충돌"),
                     13, _muted, FontWeights.Normal));
                 var outer = new Border { Width = 720, Background = ColorBrush(_winter ? "#2A1B23" : "#101B2B"), Padding = new Thickness(30), Child = labels };
                 outer.Measure(new Size(720, 500));
@@ -323,7 +339,7 @@ namespace CCSuitePro
                 {
                     var baseline = WinterLibraryService.LoadBaseline(_vm.ModsFolderPath);
                     if (baseline != null)
-                        state = T("Reference: ", "Referencia: ", "기준: ") + baseline.ScannedUtc.ToLocalTime().ToString("g");
+                        state = T("Reference: ", "Referencia: ", "기준: ") + LocalDate(baseline.ScannedUtc, "g");
                 }
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidDataException or Newtonsoft.Json.JsonException)
                 {
@@ -387,25 +403,25 @@ namespace CCSuitePro
                 _body.Children.Clear();
                 _body.Children.Add(Card(
                     Label(T("Comparison results", "Resultados de la comparación", "비교 결과"), 20, _foreground, FontWeights.Bold),
-                    Label(T("Reference: ", "Referencia: ", "기준: ") + baseline.ScannedUtc.ToLocalTime().ToString("g") +
+                    Label(T("Reference: ", "Referencia: ", "기준: ") + LocalDate(baseline.ScannedUtc, "g") +
                         T("   ·   Current scan: ", "   ·   Escaneo actual: ", "   ·   현재 검사: ") +
-                        scan.ScannedAtUtc.ToLocalTime().ToString("g"), 12, _muted, FontWeights.Normal),
+                        LocalDate(scan.ScannedAtUtc, "g"), 12, _muted, FontWeights.Normal),
                     Label(T("Read-only results. A missing Mod may have been moved or renamed.",
                         "Resultados de solo lectura. Un Mod ausente pudo moverse o cambiar de nombre.",
                         "읽기 전용 결과입니다. 누락된 모드는 이동되거나 이름이 변경되었을 수 있습니다."),
                         12, _muted, FontWeights.Normal)));
                 _body.Children.Add(Tiles(3,
-                    Metric(T("NEW", "NUEVOS", "새 파일"), $"+{report.Added:N0}",
+                    Metric(T("NEW", "NUEVOS", "새 파일"), $"+{LocalNumber(report.Added)}",
                         T("Since reference", "Desde la referencia", "기준 이후")),
-                    Metric(T("MODIFIED", "MODIFICADOS", "변경됨"), report.Changed.ToString("N0"),
+                    Metric(T("MODIFIED", "MODIFICADOS", "변경됨"), LocalNumber(report.Changed),
                         T("Detected changes", "Cambios detectados", "감지된 변경")),
-                    Metric(T("NOT FOUND", "AUSENTES", "찾을 수 없음"), report.Missing.ToString("N0"),
+                    Metric(T("NOT FOUND", "AUSENTES", "찾을 수 없음"), LocalNumber(report.Missing),
                         T("May be moved", "Pueden haberse movido", "이동되었을 수 있음"))));
                 var content = new List<UIElement>
                 {
                     Label(T("Change details", "Detalle de cambios", "변경 내역"), 18, _foreground, FontWeights.SemiBold),
-                    Label($"{report.CurrentDuplicateGroups} " + T("current duplicate groups", "grupos duplicados actuales", "현재 중복 그룹") +
-                        $" ({report.DuplicateGroupDelta:+#;-#;0} " + T("since reference", "desde la referencia", "기준 대비") + ")",
+                    Label($"{LocalNumber(report.CurrentDuplicateGroups)} " + T("current duplicate groups", "grupos duplicados actuales", "현재 중복 그룹") +
+                        $" ({LocalSignedNumber(report.DuplicateGroupDelta)} " + T("since reference", "desde la referencia", "기준 대비") + ")",
                         12, _muted, FontWeights.Normal)
                 };
                 if (report.Changes.Count == 0)

@@ -55,7 +55,7 @@ namespace CCSuitePro
             UX25_PageTitle.Text = capsule ? lang switch
             {
                 "es" => "Cápsula del tiempo", "ko" => "타임 캡슐", _ => "Time Capsule"
-            } : "Mod Guardian";
+            } : LanguageService.Instance["winter_guardian_label"];
             UX25_PageDescription.Text = capsule ? lang switch
             {
                 "es" => "Conserva las estadísticas de tu biblioteca y compara su evolución.",
