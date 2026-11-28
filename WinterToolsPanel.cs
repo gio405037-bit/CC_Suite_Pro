@@ -99,7 +99,7 @@ private Window OwnerWindow => Window.GetWindow(this) ?? Application.Current.Main
             var tabs = new WrapPanel { Margin = new Thickness(0, 2, 0, 0) }; // WINTER36: navigation wraps in compact windows
             header.Children.Add(tabs);
             _capsuleTab = Button(T("Time Capsule", "Cápsula del tiempo", "타임 캡슐"), () => _navigate(0));
-            _guardianTab = Button("Mod Guardian", () => _navigate(1));
+            _guardianTab = Button(T("Mod Guardian", "Guardián de Mods", "모드 가디언"), () => _navigate(1));
             _guardianTab.Margin = new Thickness(9, 0, 0, 0);
             tabs.Children.Add(_capsuleTab);
             tabs.Children.Add(_guardianTab);
