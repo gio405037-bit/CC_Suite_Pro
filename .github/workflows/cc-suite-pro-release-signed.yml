@@ -57,8 +57,12 @@ jobs:
             throw 'Signing credentials not configured in repository secrets'
           }
           if ($env:DRY_RUN -ne 'true') {
-            gh release view $env:RELEASE_TAG -R gio405037-bit/CC_Suite_Pro *> $null
-            if ($LASTEXITCODE -eq 0) { throw 'Release tag already published; refusing overwrite' }
+            $releaseJson = gh release list -R gio405037-bit/CC_Suite_Pro --limit 1000 --json tagName
+            if ($LASTEXITCODE -ne 0) { throw "Could not query existing releases" }
+            $releases = ($releaseJson -join "`n") | ConvertFrom-Json
+            if (@($releases | Where-Object { $_.tagName -eq $env:RELEASE_TAG }).Count -gt 0) {
+              throw 'Release tag already published; refusing overwrite'
+            }
           }
       - name: Public source checks
         shell: pwsh
