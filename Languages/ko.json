@@ -1,4 +1,8 @@
 {
+    "winter_capsule_label":  "타임 캡슐",
+    "winter_guardian_label":  "모드 가디언",
+    "winter_capsule_tooltip":  "라이브러리 타임 캡슐 - Winter Edition",
+    "winter_guardian_tooltip":  "모드 가디언 - 스캔 간 변경 사항 확인",
     "app_title":  "CC Suite Pro",
     "app_subtitle":  "프로페셔널",
     "dashboard":  "대시보드",

@@ -201,10 +201,10 @@
      <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="Cog" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [settings], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
     <Button x:Name="BackupTourTarget" Style="{StaticResource Nav}" Command="{Binding BackupCommand}" ToolTip="{Binding [ui_make_a_safety_backup_of_your_library_660b0], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
      <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="BackupRestore" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [backup], Source={x:Static services:LanguageService.Instance}}"/></StackPanel></Button>
-    <Button x:Name="WinterCapsuleNav" Style="{StaticResource Nav}" Click="OpenTimeCapsule_Click" ToolTip="Library Time Capsule — Winter Edition">
-     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="Time Capsule"/></StackPanel></Button>
-    <Button x:Name="WinterGuardianNav" Style="{StaticResource Nav}" Click="OpenModGuardian_Click" ToolTip="Mod Guardian — review changes between scans">
-     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AlertCircle" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="Mod Guardian"/></StackPanel></Button>
+    <Button x:Name="WinterCapsuleNav" Style="{StaticResource Nav}" Click="OpenTimeCapsule_Click" ToolTip="{Binding [winter_capsule_tooltip], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="ContentCopy" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [winter_capsule_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/></StackPanel></Button>
+    <Button x:Name="WinterGuardianNav" Style="{StaticResource Nav}" Click="OpenModGuardian_Click" ToolTip="{Binding [winter_guardian_tooltip], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
+     <StackPanel Orientation="Horizontal"><materialDesign:PackIcon Kind="AlertCircle" Width="18" Height="18" Margin="0,0,12,0"/><TextBlock Text="{Binding [winter_guardian_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}"/></StackPanel></Button>
    </StackPanel>
   </ScrollViewer>
  </DockPanel>
@@ -313,11 +313,11 @@
      <StackPanel>
       <TextBlock Text="{Binding Title, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="White" FontSize="19" FontWeight="SemiBold"/>
       <TextBlock Text="{Binding Summary, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A7BDD9}" FontSize="12" TextWrapping="Wrap" Margin="0,7,0,12"/>
-      <Button Click="OpenTimeCapsule_Click" Style="{StaticResource FindingAction}" MinHeight="64" Margin="0,0,0,10" ToolTip="Library Time Capsule — Winter Edition">
+      <Button Click="OpenTimeCapsule_Click" Style="{StaticResource FindingAction}" MinHeight="64" Margin="0,0,0,10" ToolTip="{Binding [winter_capsule_tooltip], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}">
        <DockPanel LastChildFill="True">
         <materialDesign:PackIcon Kind="ContentCopy" Width="20" Height="20" Foreground="{DynamicResource Theme.Brush.88B8FF}" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,14,0"/>
         <StackPanel VerticalAlignment="Center">
-         <TextBlock Text="Time Capsule" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
+         <TextBlock Text="{Binding [winter_capsule_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
          <TextBlock Text="{Binding CapsuleHint, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A8BEDD}" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0"/>
         </StackPanel>
        </DockPanel>
@@ -326,7 +326,7 @@
        <DockPanel LastChildFill="True">
         <materialDesign:PackIcon Kind="AlertCircle" Width="20" Height="20" Foreground="{DynamicResource Theme.Brush.88B8FF}" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,14,0"/>
         <StackPanel VerticalAlignment="Center">
-         <TextBlock Text="Mod Guardian" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
+         <TextBlock Text="{Binding [winter_guardian_label], Source={x:Static services:LanguageService.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.F0F6FF}" FontWeight="SemiBold" FontSize="14"/>
          <TextBlock Text="{Binding GuardianHint, Source={x:Static services:WinterDashboardText.Instance}, Mode=OneWay}" Foreground="{DynamicResource Theme.Brush.A8BEDD}" FontSize="11" TextWrapping="Wrap" Margin="0,4,0,0"/>
         </StackPanel>
        </DockPanel>
