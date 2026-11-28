@@ -1,8 +1,8 @@
-﻿# 🔥 CC Suite Pro v2.0 Beta "Post Genesis"
+# 🔥 CC Suite Pro v2.0.0 Stable "Winter Edition 2026"
 
 **The Ultimate Sims 4 Mod & CC Manager**
 
-![Version](https://img.shields.io/badge/version-2.0%20Beta-blue)
+![Version](https://img.shields.io/badge/version-2.0.0%20Stable-brightgreen)
 ![.NET](https://img.shields.io/badge/.NET-8.0-purple)
 ![Language](https://img.shields.io/badge/language-C%23-green)
 ![License](https://img.shields.io/badge/license-Free%20%26%20Open%20Source-orange)
@@ -41,10 +41,10 @@ CC Suite Pro is an all-in-one manager for The Sims 4 Mods and Custom Content. Bu
 
 ## 🚀 Installation
 
-1. Download `CCSuitePro.exe` from [Releases](https://github.com/gio405037-bit/CC_Suite_Pro/releases)
-2. Run it
-3. Select your Sims 4 Mods folder
-4. Start organizing!
+1. Download `CCSuitePro_v2.0.0_win-x64.zip` from [Releases](https://github.com/gio405037-bit/CC_Suite_Pro/releases)
+2. Extract the ZIP into a folder
+3. Open the CCSuitePro folder and run CCSuitePro.exe
+4. Select your Mods folder and start organizing!
 
 ---
 
